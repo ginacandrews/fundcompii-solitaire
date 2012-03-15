@@ -36,8 +36,11 @@ public:
 	string cardSuit(const int);
 	void flipOver();
 	int getVal(int);
-
+	deque<int> popSection(int);  //functions for pushing and popping sections of the column
+	void pushSection(deque<int>);//
 	int getSize();
+
+
 private:
 	deque<int> value;
 	deque<int> flip;

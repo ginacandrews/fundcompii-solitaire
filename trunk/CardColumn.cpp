@@ -20,6 +20,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <iostream>
+#include <stdio.h>
 #include <string>
 #include <deque>
 
@@ -48,37 +49,11 @@ void CardColumn::print(){
 
 string CardColumn::cardValue(const int cardnum){ //returns card value as char 
 	string character;
+	char * buff;
 	int num = cardnum%13;	
 	switch (num){
 	case 0:
 		character = "Ace";
-		break;
-	case 1:
-		character = "2";
-		break;
-	case 2:
-		character = "3";
-		break;
-	case 3:
-		character = "4";
-		break;
-	case 4:
-		character = "5";
-		break;
-	case 5:
-		character = "6";
-		break;
-	case 6:
-		character = "7";
-		break;
-	case 7:
-		character = "8";
-		break;
-	case 8:
-		character = "9";
-		break;
-	case 9:
-		character = "10";
 		break;
 	case 10:
 		character = "Jack";
@@ -88,6 +63,10 @@ string CardColumn::cardValue(const int cardnum){ //returns card value as char
 		break;
 	case 12:
 		character = "King";
+		break;
+	default:
+		sprintf(buff, "%d", num++);
+		character = buff;
 		break;
 	}
 	return(character);
@@ -111,6 +90,26 @@ void CardColumn::flipOver(){
 
 int CardColumn::getVal(int position){ //returns value at position
 	return(value[position]);
+}
+
+deque<int> CardColumn::popSection(int numDeep){
+	deque<int> tempSection;
+	for (int i = 0; i < numDeep; i++)
+	{
+		tempSection.push_back(value.back());
+		value.pop_back();
+	}
+	return tempSection;
+}
+
+void CardColumn::pushSection(deque<int> section){
+
+	for(int i = 0; i < section.size(); i++)
+	{
+		value.push_back(section.front());
+		section.pop_front();
+	}
+
 }
 
 int CardColumn::getSize(){ //returns size of that column
