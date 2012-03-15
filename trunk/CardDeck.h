@@ -29,7 +29,7 @@ using namespace std;
 class CardDeck {
 
 public:
-	CardDeck(const int=0);
+	CardDeck(const int=52);
 	int getSize(); //returns deck dize
 	void shuffle(); //shuffles deck
 	void newDeck();

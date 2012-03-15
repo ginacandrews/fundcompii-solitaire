@@ -98,16 +98,18 @@ deque<int> CardColumn::popSection(int numDeep){
 	{
 		tempSection.push_back(value.back());
 		value.pop_back();
+		flip.pop_back();
 	}
 	return tempSection;
 }
 
 void CardColumn::pushSection(deque<int> section){
 
-	for(int i = 0; i < section.size(); i++)
+	while(section.size() > 0)
 	{
-		value.push_back(section.front());
-		section.pop_front();
+		value.push_back(section.back());
+		flip.push_back(1);
+		section.pop_back();
 	}
 
 }

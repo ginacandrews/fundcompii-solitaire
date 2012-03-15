@@ -35,7 +35,7 @@ public:
 	int isAllowed(int, int); 	//returns 1 if it's allowed 
 	int cardNumber(const int); 	//returns number of card (0 = Ace, 12=K)
 	int suitNum(const int);		//returns 1 for red, 0 for black
-	void moveCards(int, int, int); 	//copies contents of colsrc, cardnumber deep, into dest coldest
+	int moveCards(int, int, int); 	//copies contents of colsrc, cardnumber deep, into dest coldest, returns 1 if success
 	CardColumn getColumn(int);	//returns cardcolumn 
 	void setColumn(CardColumn,int);	//sets cardcolumn # int
 private: 
