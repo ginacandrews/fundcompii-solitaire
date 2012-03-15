@@ -24,26 +24,23 @@
 #include<string>
 #include<deque>
 
-#include"CardDeck.h"
-
 using namespace std;
 
 class CardColumn{
 
 public:
-CardColumn();
-void setCard(int, int);
-void print();
-string cardValue(const int);
-string cardSuit(const int);
-void flipOver();
-//deque<int> getColVals();
-int getVal(int);
+	CardColumn();
+	void setCard(int, int);
+	void print();
+	string cardValue(const int);
+	string cardSuit(const int);
+	void flipOver();
+	int getVal(int);
 
-int getSize();
+	int getSize();
 private:
-deque<int> value;
-deque<int> flip;
+	deque<int> value;
+	deque<int> flip;
 
 };
 

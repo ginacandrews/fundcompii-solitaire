@@ -21,7 +21,7 @@
 
 #include <iostream>
 
-#include "Deck.h"
+#include "CardDeck.h"
 #include "CardColumn.h"
 #include "Board.h"
 
@@ -29,18 +29,18 @@ using namespace std;
 
 int main ( int argc, char *argv[] )
 {
-  Board board; 
-  board.deal();
-  board.print();
+	Board board; 
+	board.deal();
+	board.print();
 
-  int allowed = board.isAllowed(0,14);
-  cout<<"is allowed is: "<<allowed<<endl<<"copying column 2 to column 3"<<endl<<endl;
+	int allowed = board.isAllowed(0,14);
+	cout<<"is allowed is: "<<allowed<<endl<<"copying column 2 to column 3"<<endl<<endl;
 
-  CardColumn temp;
-  int top=2; int bottom=3;
-  temp = board.moveCards(board.getColumn(top),board.getColumn(bottom)); 
-  board.setColumn(temp,bottom);
+	CardColumn temp;
+	int top=2; int bottom=3;
+	temp = board.moveCards(board.getColumn(top),board.getColumn(bottom)); 
+	board.setColumn(temp,bottom);
 
-  board.print();
-  return (0);
+	board.print();
+	return (0);
 }

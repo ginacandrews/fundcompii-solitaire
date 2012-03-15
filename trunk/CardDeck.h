@@ -29,16 +29,15 @@ using namespace std;
 class CardDeck {
 
 public:
-CardDeck(); //constructors
-CardDeck(const int);
-int getSize(); //returns deck dize
-void shuffle(); //shuffles deck
-void startDeal(); //deals starting cards
-//char cardValue(const int &); //returns char value of card 
-void newDeck();
-int getCard();
+	CardDeck(const int=0);
+	int getSize(); //returns deck dize
+	void shuffle(); //shuffles deck
+	void newDeck();
+	int getCard();
+
 private:
-deque<int> Deck; //deck of 52 cards
+	deque<int> Deck; //deck of 52 cards
+
 };
 
 #endif
