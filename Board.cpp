@@ -78,9 +78,13 @@ int Board::isAllowed(int top, int bottom){ //returns 1 if move from top to botto
 	return(0);
 }
 
-void Board::moveCards(int srccolnum, int srccolcard, int destcolnum){ //copies sourcecolumn starting at srccolcard deep to destcol
+int Board::moveCards(int srccolnum, int srccolcard, int destcolnum){ //copies sourcecolumn starting at srccolcard deep to destcol
 
-	column[destcolnum].pushSection(column[srccolnum].popSection(srccolcard));
+	if (isAllowed(column[srccolnum].getVal(column[srccolnum].getSize() - srccolcard), column[destcolnum].getVal(column[destcolnum].getSize() - 1)))
+	{
+		column[destcolnum].pushSection(column[srccolnum].popSection(srccolcard));
+		return 1;
+	} else return 0;
 
 }
 
@@ -91,20 +95,5 @@ CardColumn Board::getColumn(int colNum){ //returns cardcolumn # colNum
 void Board::setColumn(CardColumn bottom,int colNum){ //sets cardcolumn # colNum to bottom
 	column[colNum]=bottom;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
