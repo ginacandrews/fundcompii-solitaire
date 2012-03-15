@@ -33,6 +33,7 @@ Board::Board(){
 
 void Board::deal(){
 	int flp=0;
+	deck.newDeck();
 	deck.shuffle();
 	for (int i = 7; i> 0; i--){
 		for (int j = 0; j<i; j++){
@@ -77,11 +78,10 @@ int Board::isAllowed(int top, int bottom){ //returns 1 if move from top to botto
 	return(0);
 }
 
-CardColumn Board::moveCards(CardColumn topcol, CardColumn bottomcol){ //copies topcol to bottomcol
-	for (int i=0; i<topcol.getSize(); i++){
-		bottomcol.setCard(topcol.getVal(i),1);
-	}
-	return(bottomcol);
+void Board::moveCards(int srccolnum, int srccolcard, int destcolnum){ //copies sourcecolumn starting at srccolcard deep to destcol
+
+	column[destcolnum].pushSection(column[srccolnum].popSection(srccolcard));
+
 }
 
 CardColumn Board::getColumn(int colNum){ //returns cardcolumn # colNum

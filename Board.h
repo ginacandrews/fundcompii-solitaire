@@ -35,11 +35,11 @@ public:
 	int isAllowed(int, int); 	//returns 1 if it's allowed 
 	int cardNumber(const int); 	//returns number of card (0 = Ace, 12=K)
 	int suitNum(const int);		//returns 1 for red, 0 for black
-	CardColumn moveCards(CardColumn, CardColumn); 	//copies first parameter cardcolumn to the end of the second cardcolumn
+	void moveCards(int, int, int); 	//copies contents of colsrc, cardnumber deep, into dest coldest
 	CardColumn getColumn(int);	//returns cardcolumn 
 	void setColumn(CardColumn,int);	//sets cardcolumn # int
 private: 
-	CardColumn column[20];
+	CardColumn column[8];
 	CardDeck deck;
 };
 #endif
