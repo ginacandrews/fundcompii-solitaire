@@ -20,7 +20,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <iostream>
-#include <stdio.h>
 #include <string>
 #include <deque>
 
@@ -47,40 +46,6 @@ void CardColumn::print(){
 	}
 }
 
-string CardColumn::cardValue(const int cardnum){ //returns card value as char 
-	string character;
-	char * buff;
-	int num = cardnum%13;	
-	switch (num){
-	case 0:
-		character = "Ace";
-		break;
-	case 10:
-		character = "Jack";
-		break;
-	case 11:
-		character = "Queen";
-		break;
-	case 12:
-		character = "King";
-		break;
-	default:
-		sprintf(buff, "%d", num++);
-		character = buff;
-		break;
-	}
-	return(character);
-}
-
-string CardColumn::cardSuit(const int cardnum){
-	string suit;
-	if (cardnum/13>=0) suit = "Diamonds";
-	if (cardnum/13>=1) suit = "Clubs";
-	if (cardnum/13>=2) suit = "Hearts";
-	if (cardnum/13>=3) suit = "Spades";
-	return (suit);
-}
-
 void CardColumn::flipOver(){
 	if(flip.back()==0) {
 		flip.pop_back();
@@ -90,6 +55,11 @@ void CardColumn::flipOver(){
 
 int CardColumn::getVal(int position){ //returns value at position
 	return(value[position]);
+}
+
+int CardColumn::getFlip(int position)
+{
+	return(flip[position]);
 }
 
 deque<int> CardColumn::popSection(int numDeep){
@@ -117,3 +87,4 @@ void CardColumn::pushSection(deque<int> section){
 int CardColumn::getSize(){ //returns size of that column
 	return(value.size());
 }
+

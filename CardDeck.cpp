@@ -29,22 +29,26 @@
 
 using namespace std;
 
-CardDeck::CardDeck(const int n){ //non-default constructor
+CardDeck::CardDeck(const int n)
+{ //non-default constructor
 	for(int i=0; i<n; i++){
 		Deck.push_back(i);
 	}
 	srand(time(0));
 }
 
-int CardDeck::getSize(){ //returns current deck size
+int CardDeck::getSize()
+{ //returns current deck size
 	return(Deck.size());
 }
 
-void CardDeck::shuffle(){ //shuffles cards
+void CardDeck::shuffle()
+{ //shuffles cards
 	random_shuffle(Deck.begin(),Deck.end());
 }
 
-void CardDeck::newDeck(){
+void CardDeck::newDeck()
+{
 	int oldDeckSize = Deck.size();
 	Deck.clear();
 	for(int i=0; i<oldDeckSize; i++){ 
@@ -52,9 +56,14 @@ void CardDeck::newDeck(){
 	}
 }
 
-int CardDeck::getCard(){
+int CardDeck::getCard()
+{
 	int card = Deck.front();
 	Deck.pop_front();
 	return(card);
 }
 
+void CardDeck::pushCard(const int card)
+{
+	Deck.push_back(card);
+}

@@ -38,8 +38,12 @@ public:
 	int moveCards(int, int, int); 	//copies contents of colsrc, cardnumber deep, into dest coldest, returns 1 if success
 	CardColumn getColumn(int);	//returns cardcolumn 
 	void setColumn(CardColumn,int);	//sets cardcolumn # int
+	void draw();
+	int getDeckRemaining();
+
 private: 
-	CardColumn column[8];
+	int drawNumber;
+	CardColumn column[9];
 	CardDeck deck;
 };
 #endif

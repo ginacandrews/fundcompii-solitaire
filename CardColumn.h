@@ -21,7 +21,6 @@
 #ifndef CARDCOLUMN_H
 #define CARDCOLUMN_H
 
-#include<string>
 #include<deque>
 
 using namespace std;
@@ -32,14 +31,12 @@ public:
 	CardColumn();
 	void setCard(int, int);
 	void print();
-	string cardValue(const int);
-	string cardSuit(const int);
 	void flipOver();
 	int getVal(int);
+	int getFlip(int);
 	deque<int> popSection(int);  //functions for pushing and popping sections of the column
 	void pushSection(deque<int>);//
 	int getSize();
-
 
 private:
 	deque<int> value;

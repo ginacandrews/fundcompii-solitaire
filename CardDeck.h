@@ -33,6 +33,7 @@ public:
 	int getSize(); //returns deck dize
 	void shuffle(); //shuffles deck
 	void newDeck();
+	void pushCard(const int);
 	int getCard();
 
 private:

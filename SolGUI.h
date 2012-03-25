@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// main.cpp                                                                   //
+// SolGUI.h                                                               //
 //  (c) Gina Andrews, Eric Vaughn, Aubrey Zielinski                           //
 ////////////////////////////////////////////////////////////////////////////////
 //                                                                            //
@@ -19,28 +19,43 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.   //
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <string>
 #include <iostream>
-#include <QApplication>
-#include <qgraphicsscene.h>
-#include <qgraphicsview.h>
+#include <QWidget>
+#include <QtGui>
 
-#include "SolGUI.h"
-#include <qwidget.h>
+#include "Board.h"
 
 using namespace std;
 
-int main ( int argc, char *argv[] )
+class SolGUI : public QWidget
 {
-	QApplication GUILoop(argc, argv);
-	//QGraphicsScene scene;
-	//QGraphicsView view(&scene);
-	//view.show();
+	 Q_OBJECT
 
-	SolGUI a;
+public:
+	SolGUI();
+protected:
+	void paintEvent(QPaintEvent*);
+	void mousePressEvent(QMouseEvent*);
+	void mouseMoveEvent(QMouseEvent*);
+	void mouseReleaseEvent(QMouseEvent*);
+	void resizeEvent(QResizeEvent*);
+private:
+	void setUpSnapLocs();
+	QSize snapCardPos(QSize loc);
 
-	a.show();
-	return GUILoop.exec();
+	Board board;
+	QSize *snapLocs;
+	string cardValue(const int);
+	string cardSuit(const int);
+	QImage *cardImage;
+	QImage *cardBack;
+	int screenWidth;
+	int screenHeight;
+	float ratio;
 
-	return 0;
-
-}
+	//Drag variables
+	int mouseDown;
+	int dragx;
+	int dragy;
+};
