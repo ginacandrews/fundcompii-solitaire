@@ -42,6 +42,8 @@ void Board::deal(){
 			column[i].setCard(deck.getCard(),flp);
 		}
 	}
+
+	drawNumber = 3;
 }
 
 void Board::print(){
@@ -96,4 +98,14 @@ void Board::setColumn(CardColumn bottom,int colNum){ //sets cardcolumn # colNum 
 	column[colNum]=bottom;
 }
 
+int Board::getDeckRemaining()
+{
+	return deck.getSize();
+}
+
+void Board::draw()
+{
+	for(int i = 0; i < drawNumber; i++)
+		column[8].setCard(deck.getCard(), 1);
+}
 
