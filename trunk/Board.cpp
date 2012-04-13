@@ -124,9 +124,7 @@ temp.push_back(cardnum%13);
 	if (cardnum/13>=2) suit = 3;
 	if (cardnum/13>=3) suit = 4;
 
-	if (cardnum%13==suitpiles[suit].lastCard()+1) suitpiles[suit].pushSection(column[col_num].popSection(1));
-
-
+	if (cardnum%13==suitpiles[suit].getVal(suitpiles[suit].getSize())+1) suitpiles[suit].pushSection(column[col_num].popSection(1));
 
 }
 
