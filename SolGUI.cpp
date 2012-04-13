@@ -99,6 +99,9 @@ void SolGUI::mousePressEvent(QMouseEvent *e)
 {
 	if (e->button() == Qt::LeftButton) {
 		mouseDown = 1;
+
+
+		board.draw();
 	}
 
 	e->accept();
@@ -119,7 +122,8 @@ void SolGUI::resizeEvent(QResizeEvent *e)
 
 	for(int i = 0; i < 52; i++)
 	{
-		file = "resources/" + cardSuit(i) + "-" + cardValue(i) + "-150.png";
+		//file = "resources/" + cardSuit(i) + "-" + cardValue(i) + "-150.png";
+		file = "resources/clubs-2-150.png";
 		filename = QString::fromStdString(file);
 		cardImage[i].load(filename);
 		cardImage[i] = cardImage[i].scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
