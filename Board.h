@@ -40,10 +40,12 @@ public:
 	void setColumn(CardColumn,int);	//sets cardcolumn # int
 	void draw();
 	int getDeckRemaining();
+	void putUp(int,int);
 
 private: 
 	int drawNumber;
 	CardColumn column[9];
+	CardColumn suitpiles[5];
 	CardDeck deck;
 };
 #endif
