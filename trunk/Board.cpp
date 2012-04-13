@@ -42,7 +42,12 @@ void Board::deal(){
 			column[i].setCard(deck.getCard(),flp);
 		}
 	}
-
+deque <int> tempdeck;
+tempdeck.push_front(-1);
+suitpiles[1].pushSection(tempdeck);
+suitpiles[2].pushSection(tempdeck);
+suitpiles[3].pushSection(tempdeck);
+suitpiles[4].pushSection(tempdeck);
 	drawNumber = 3;
 }
 
@@ -105,11 +110,23 @@ int Board::getDeckRemaining()
 
 void Board::draw()
 {
-	int tempValue;
 	for(int i = 0; i < drawNumber; i++)
-	{
-		if ((tempValue = deck.getCard()) != -1)
-			column[8].setCard(tempValue, 1);
-	}
+		column[8].setCard(deck.getCard(), 1);
+}
+
+void Board::putUp(int cardnum, int col_num)
+{
+deque<int> temp;
+temp.push_back(cardnum%13);
+	int suit;
+	if (cardnum/13>=0) suit = 1;
+	if (cardnum/13>=1) suit = 2;
+	if (cardnum/13>=2) suit = 3;
+	if (cardnum/13>=3) suit = 4;
+
+	if (cardnum%13==suitpiles[suit].lastCard()+1) suitpiles[suit].pushSection(column[col_num].popSection(1));
+
+
+
 }
 
