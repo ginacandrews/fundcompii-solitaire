@@ -58,9 +58,12 @@ void CardDeck::newDeck()
 
 int CardDeck::getCard()
 {
-	int card = Deck.front();
-	Deck.pop_front();
-	return(card);
+	if(Deck.size() > 0)
+	{
+		int card = Deck.front();
+		Deck.pop_front();
+		return(card);
+	} else return -1;
 }
 
 void CardDeck::pushCard(const int card)

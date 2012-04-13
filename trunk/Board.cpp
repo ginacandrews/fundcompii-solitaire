@@ -105,7 +105,11 @@ int Board::getDeckRemaining()
 
 void Board::draw()
 {
+	int tempValue;
 	for(int i = 0; i < drawNumber; i++)
-		column[8].setCard(deck.getCard(), 1);
+	{
+		if ((tempValue = deck.getCard()) != -1)
+			column[8].setCard(tempValue, 1);
+	}
 }
 
