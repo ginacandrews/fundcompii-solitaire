@@ -80,7 +80,7 @@ void SolGUI::paintEvent(QPaintEvent*)
 	if (board.getDeckRemaining() > 0)
 		qpainter.drawImage(20*ratio, 20*ratio, *cardBack);
 
-	if(mouseDown)
+	if(mouseDown) //if mouse is held down, draw the stack we could be holding.
 	{
 		cardColumn = board.getColumn(0);
 		for(int i = 0; i < cardColumn.getSize(); i++)
@@ -144,27 +144,30 @@ void SolGUI::getCardSelectLoc(int x, int y)
 	CardColumn cardColumn;
 	CardColumn emptyColumn;
 
-	for(int i = 1; i < 8; i++)
+	for(int i = 1; i < 8; i++) //There are better ways to do this than an iterative approach, but it works just as well.
 	{
 		cardColumn = board.getColumn(i);
 		for(int j = cardColumn.getSize()-1; j >= 0; j--)
 			if(x < (snapLocs[i].width()*ratio+(cardBack->width()/2)) && x > (snapLocs[i].width()*ratio-(cardBack->width()/2))
 				&& y < (snapLocs[i].height()*ratio+j*35*ratio+(cardBack->height()/2)) && y > (snapLocs[i].height()*ratio+j*35*ratio-(cardBack->height()/2)))
 			{
+				//At this point, i will be the column number (from the left) and j will be the depth in that column.
+
 				if(mouseDown)
-				{
+				{//we're selecting a fresh stack.
 					cardColumn=board.getColumn(i);
-					if(cardColumn.getFlip(j))
+					if(cardColumn.getFlip(j)) //if this is a valid selection
 					{
 						board.moveCards(i, cardColumn.getSize()-j, 0, 0);
 						movingFrom=i;
-					}
+					} //TODO: } else { if top card in stack, flip over
 				}
 				else
-				{
+				{//we might be dropping a stack
 					cardColumn=board.getColumn(0);
-					if(!board.moveCards(0, cardColumn.getSize(), i, 1))
-						board.moveCards(0, cardColumn.getSize(), movingFrom, 0);
+					//////////////BUG//////write in if(holding cards) check here
+					if(!board.moveCards(0, cardColumn.getSize(), i, 1))  //try to ove cards to the stack we're over
+						board.moveCards(0, cardColumn.getSize(), movingFrom, 0); //if that doesn't work, pop them back where they came from
 				}
 				return;
 			}
