@@ -60,9 +60,8 @@ void Board::print(){
 }
 
 int Board::cardNumber(const int cardnum){ //returns card value as num 
-	int card;
 	int num = cardnum%13;	
-	return(card);
+	return(num);
 }
 
 int Board::suitNum(const int cardnum){ //returns suit number
@@ -85,18 +84,35 @@ int Board::isAllowed(int top, int bottom){ //returns 1 if move from top to botto
 	return(0);
 }
 
-int Board::moveCards(int srccolnum, int srccolcard, int destcolnum){ //copies sourcecolumn starting at srccolcard deep to destcol
+int Board::moveCards(int srccolnum, int srccolcard, int destcolnum, int safe){ //copies sourcecolumn starting at srccolcard deep to destcol
 
-	if (isAllowed(column[srccolnum].getVal(column[srccolnum].getSize() - srccolcard), column[destcolnum].getVal(column[destcolnum].getSize() - 1)))
+	if(safe)
 	{
+		if (isAllowed(column[srccolnum].getVal(column[srccolnum].getSize() - srccolcard), column[destcolnum].getVal(column[destcolnum].getSize() - 1)))
+		{
+			column[destcolnum].pushSection(column[srccolnum].popSection(srccolcard));
+			return 1;
+		} else return 0;
+	} else {
 		column[destcolnum].pushSection(column[srccolnum].popSection(srccolcard));
 		return 1;
-	} else return 0;
+	}
 
 }
 
-CardColumn Board::getColumn(int colNum){ //returns cardcolumn # colNum
+CardColumn Board::getColumn(int colNum)
+{ //returns cardcolumn # colNum
 	return(column[colNum]);
+}
+
+CardColumn Board::getDeckDiscard()
+{
+	return deckdiscard;
+}
+
+CardColumn Board::getSuitPile(int pileNum)
+{
+	return(suitpiles[pileNum]);
 }
 
 void Board::setColumn(CardColumn bottom,int colNum){ //sets cardcolumn # colNum to bottom
@@ -111,7 +127,7 @@ int Board::getDeckRemaining()
 void Board::draw()
 {
 	for(int i = 0; i < drawNumber; i++)
-		column[8].setCard(deck.getCard(), 1);
+		deckdiscard.setCard(deck.getCard(), 1);
 }
 
 void Board::putUp(int cardnum, int col_num)

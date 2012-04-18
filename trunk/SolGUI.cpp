@@ -59,25 +59,33 @@ void SolGUI::paintEvent(QPaintEvent*)
 	CardColumn cardColumn;
 	QPainter qpainter(this);
 
-	for(int i = 1; i < 9; i++)
+	for(int i = 1; i < 8; i++)
 	{
 		cardColumn = board.getColumn(i);
 		for(int j = 0; j < cardColumn.getSize(); j++)
 		{
-			if (i == 8) //deck
-			{
-				qpainter.drawImage(snapLocs[i].width()*ratio+j*35*ratio, snapLocs[i].height()*ratio, cardImage[cardColumn.getVal(j)]);
-			} else { //all other columns
 				if(cardColumn.getFlip(j) == 1)
-					qpainter.drawImage(snapLocs[i].width()*ratio, snapLocs[i].height()*ratio+j*25*ratio, cardImage[cardColumn.getVal(j)]);
+					qpainter.drawImage(snapLocs[i].width()*ratio-((cardImage[cardColumn.getVal(j)].width())/2), snapLocs[i].height()*ratio+j*35*ratio-((cardImage[cardColumn.getVal(j)].height())/2), cardImage[cardColumn.getVal(j)]);
 				else
-					qpainter.drawImage(snapLocs[i].width()*ratio, snapLocs[i].height()*ratio+(float(j*25)*ratio), *cardBack);
-			}
+					qpainter.drawImage(snapLocs[i].width()*ratio-((cardImage[cardColumn.getVal(j)].width())/2), snapLocs[i].height()*ratio+(float(j*35)*ratio)-((cardImage[cardColumn.getVal(j)].height())/2), *cardBack);
 		}
 	}
 
+	for(int i = 0; i < board.getDeckDiscard().getSize(); i++)
+		qpainter.drawImage(deckLoc.width()*ratio+i*35*ratio, deckLoc.height()*ratio, cardImage[board.getDeckDiscard().getVal(i)]);
+
+	for(int i = 1; i < 5; i++)
+		//draw each suit pile top card
+
 	if (board.getDeckRemaining() > 0)
 		qpainter.drawImage(20*ratio, 20*ratio, *cardBack);
+
+	if(mouseDown)
+	{
+		cardColumn = board.getColumn(0);
+		for(int i = 0; i < cardColumn.getSize(); i++)
+			qpainter.drawImage(dragx-((cardImage[cardColumn.getVal(i)].width())/2), dragy+i*35*ratio-((cardImage[cardColumn.getVal(i)].height())/2), cardImage[cardColumn.getVal(i)]);
+	}
 }
 
 QSize SolGUI::snapCardPos(QSize loc)
@@ -91,9 +99,9 @@ void SolGUI::setUpSnapLocs()
 	snapLocs = new QSize[9];
 
 	for(int i = 1; i < 8; i++)
-		snapLocs[i] = QSize(20+170*(i-1), 350);
+		snapLocs[i] = QSize(100+170*(i-1), 370);
 
-	snapLocs[8] = QSize(190, 20); //deck
+	deckLoc = QSize(190, 20); //deck
 
 }
 
@@ -101,11 +109,75 @@ void SolGUI::mousePressEvent(QMouseEvent *e)
 {
 	if (e->button() == Qt::LeftButton) {
 		mouseDown = 1;
-		board.draw();
+		dragx = e->x();
+		dragy = e->y();
+		getCardSelectLoc(e->x(), e->y()); //pushes cards in to the "holding vector"
+		//board.draw();
 	}
 
 	e->accept();
 	update();
+}
+
+void SolGUI::mouseMoveEvent(QMouseEvent *e)
+{
+	setCursor(Qt::ClosedHandCursor);
+	dragx = e->x();
+	dragy = e->y();
+	update();
+}
+
+void SolGUI::mouseReleaseEvent(QMouseEvent *e)
+{
+	if (e->button() == Qt::LeftButton) {
+		setCursor(Qt::OpenHandCursor);
+		dragx = e->x();
+		dragy = e->y();
+		mouseDown = 0;
+		getCardSelectLoc(e->x(), e->y());
+	}
+	update();
+}
+
+void SolGUI::getCardSelectLoc(int x, int y)
+{
+	CardColumn cardColumn;
+	CardColumn emptyColumn;
+
+	for(int i = 1; i < 8; i++)
+	{
+		cardColumn = board.getColumn(i);
+		for(int j = cardColumn.getSize()-1; j >= 0; j--)
+			if(x < (snapLocs[i].width()*ratio+(cardBack->width()/2)) && x > (snapLocs[i].width()*ratio-(cardBack->width()/2))
+				&& y < (snapLocs[i].height()*ratio+j*35*ratio+(cardBack->height()/2)) && y > (snapLocs[i].height()*ratio+j*35*ratio-(cardBack->height()/2)))
+			{
+				if(mouseDown)
+				{
+					cardColumn=board.getColumn(i);
+					if(cardColumn.getFlip(j))
+					{
+						board.moveCards(i, cardColumn.getSize()-j, 0, 0);
+						movingFrom=i;
+					}
+				}
+				else
+				{
+					cardColumn=board.getColumn(0);
+					if(!board.moveCards(0, cardColumn.getSize(), i, 1))
+						board.moveCards(0, cardColumn.getSize(), movingFrom, 0);
+				}
+				return;
+			}
+	}
+
+	//we only get to this point if we didn't find a valid stack to pull from or drop on.
+	// This code "snaps" cards back to their original stack if we're holding cards and just let go of the mouse button
+	cardColumn=board.getColumn(0);
+	if (!mouseDown && cardColumn.getSize() > 0)
+		board.moveCards(0, cardColumn.getSize(), movingFrom, 0);
+
+
+
 }
 
 void SolGUI::resizeEvent(QResizeEvent *e)
@@ -132,25 +204,6 @@ void SolGUI::resizeEvent(QResizeEvent *e)
 
 	screenWidth = e->size().width();
 	screenHeight = e->size().height();
-}
-
-void SolGUI::mouseMoveEvent(QMouseEvent *e)
-{
-	setCursor(Qt::ClosedHandCursor);
-	dragx = e->x();
-	dragy = e->y();
-	update();
-}
-
-void SolGUI::mouseReleaseEvent(QMouseEvent *e)
-{
-	if (e->button() == Qt::LeftButton) {
-		setCursor(Qt::OpenHandCursor);
-		dragx = e->x();
-		dragy = e->y();
-		mouseDown = 0;
-		update();
-	}
 }
 
 string SolGUI::cardValue(const int cardnum){ //returns card value as char 
