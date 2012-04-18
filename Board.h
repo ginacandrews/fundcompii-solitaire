@@ -35,8 +35,10 @@ public:
 	int isAllowed(int, int); 	//returns 1 if it's allowed 
 	int cardNumber(const int); 	//returns number of card (0 = Ace, 12=K)
 	int suitNum(const int);		//returns 1 for red, 0 for black
-	int moveCards(int, int, int); 	//copies contents of colsrc, cardnumber deep, into dest coldest, returns 1 if success
+	int moveCards(int, int, int, int); 	//copies contents of colsrc, cardnumber deep, into dest coldest, returns 1 if success
 	CardColumn getColumn(int);	//returns cardcolumn 
+	CardColumn getDeckDiscard();
+	CardColumn getSuitPile(int);
 	void setColumn(CardColumn,int);	//sets cardcolumn # int
 	void draw();
 	int getDeckRemaining();
@@ -44,7 +46,8 @@ public:
 
 private: 
 	int drawNumber;
-	CardColumn column[9];
+	CardColumn column[8];
+	CardColumn deckdiscard;
 	CardColumn suitpiles[5];
 	CardDeck deck;
 };

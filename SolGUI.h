@@ -43,9 +43,12 @@ protected:
 private:
 	void setUpSnapLocs();
 	QSize snapCardPos(QSize loc);
+	void getCardSelectLoc(int, int);
 
 	Board board;
 	QSize *snapLocs;
+	QSize deckLoc;
+	QSize *topLocs;
 	string cardValue(const int);
 	string cardSuit(const int);
 	QImage *cardImage;
@@ -56,6 +59,7 @@ private:
 
 	//Drag variables
 	int mouseDown;
+	int movingFrom;
 	int dragx;
 	int dragy;
 };
