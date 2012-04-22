@@ -49,6 +49,7 @@ private:
 	int drawNumber;
 	CardColumn column[8];
 	CardColumn deckdiscard;
+	CardColumn olddeckdiscard;
 	CardColumn suitpiles[5];
 	CardDeck deck;
 };
