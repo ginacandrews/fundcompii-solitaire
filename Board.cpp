@@ -152,6 +152,7 @@ void Board::draw()
 
 	if(deck.getSize() != 0)
 	{
+		olddeckdiscard.pushSection(deckdiscard.popSection(deckdiscard.getSize()));
 		for(int i = 0; i < drawNumber; i++)
 		{
 			card = deck.getCard();
@@ -159,11 +160,19 @@ void Board::draw()
 				deckdiscard.setCard(card, 1);
 		}
 	} else {
-		deckpile = deckdiscard.popSection(deckdiscard.getSize() - 1);
+		deckpile = olddeckdiscard.popSection(olddeckdiscard.getSize());
 
 		for(int i = deckpile.size() - 1; i <= deckpile.size(); i--)
 			deck.pushCard(deckpile[i]);
+
+		deckpile = deckdiscard.popSection(deckdiscard.getSize());
+
+		for(int i = deckpile.size() - 1; i <= deckpile.size(); i--)
+			deck.pushCard(deckpile[i]);
+
+		draw();
 	}
+
 }
 
 void Board::putUp(int cardnum, int col_num)

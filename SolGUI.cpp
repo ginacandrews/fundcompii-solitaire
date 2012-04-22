@@ -73,8 +73,11 @@ void SolGUI::paintEvent(QPaintEvent*)
 	}
 
 	//draw deck discard
-	for(int i = board.getDeckDiscard().getSize()-3; i < board.getDeckDiscard().getSize(); i++)
-		qpainter.drawImage(deckLoc.width()*ratio+170*ratio+(i-(board.getDeckDiscard().getSize()-3))*35*ratio-((cardBack->width())/2), deckLoc.height()*ratio-((cardBack->height())/2), cardImage[board.getDeckDiscard().getVal(i)]);
+	//for(int i = board.getDeckDiscard().getSize()-3; i < board.getDeckDiscard().getSize(); i++)
+		//qpainter.drawImage(deckLoc.width()*ratio+170*ratio+(i-(board.getDeckDiscard().getSize()-3))*35*ratio-((cardBack->width())/2), deckLoc.height()*ratio-((cardBack->height())/2), cardImage[board.getDeckDiscard().getVal(i)]);
+
+	for(int i = 0; i < board.getDeckDiscard().getSize(); i++)
+		qpainter.drawImage(deckLoc.width()*ratio+170*ratio+i*35*ratio-((cardBack->width())/2), deckLoc.height()*ratio-((cardBack->height())/2), cardImage[board.getDeckDiscard().getVal(i)]);
 
 	//draw each suit pile top card
 	for(int i = 1; i < 5; i++)
@@ -152,7 +155,6 @@ void SolGUI::getCardSelectLoc(int x, int y)
 		return;
 	}
 
-	//for(int i = 0; i < (((board.getDeckDiscard().getSize() % 3) == 0) ? 3 : board.getDeckDiscard().getSize() % 3); i++)
 	//if we click the deck discard pile
 	int i = (((board.getDeckDiscard().getSize() % 3) == 0) ? 3 : board.getDeckDiscard().getSize() % 3);
 	if(x < deckLoc.width()*ratio+170*ratio+i*35*ratio+((cardBack->width())/2) && x > deckLoc.width()*ratio+170*ratio+i*35*ratio-((cardBack->width())/2)
@@ -161,6 +163,7 @@ void SolGUI::getCardSelectLoc(int x, int y)
 		{
 			movingFromType = 1;
 			board.moveCards(8, 1, 0, 0);
+			return;
 		}
 
 	//if we click on a column
@@ -194,8 +197,7 @@ void SolGUI::getCardSelectLoc(int x, int y)
 					cardColumn=board.getColumn(0);
 					//////////////BUG//////write in if(holding cards) check here
 					if(!board.moveCards(0, cardColumn.getSize(), i, 1))  //try to move cards to the stack we're over
-						returnCards();
-						//board.moveCards(0, cardColumn.getSize(), movingFrom, 0); //if that doesn't work, pop them back where they came from
+						returnCards(); //if that doesn't work, pop them back where they came from
 				}
 				return;
 			}
