@@ -86,14 +86,28 @@ int Board::isAllowed(int top, int bottom){ //returns 1 if move from top to botto
 
 int Board::moveCards(int srccolnum, int srccolcard, int destcolnum, int safe){ //copies sourcecolumn starting at srccolcard deep to destcol
 
-	if(safe)
+
+	if(srccolnum == 8)
 	{
-		if (isAllowed(column[srccolnum].getVal(column[srccolnum].getSize() - srccolcard), column[destcolnum].getVal(column[destcolnum].getSize() - 1)))
-		{
+		column[destcolnum].pushSection(deckdiscard.popSection(srccolcard));
+	} else if (destcolnum == 8)
+	{
+		deckdiscard.pushSection(column[srccolnum].popSection(srccolcard));
+	} else if(safe)
+	{
+		if(column[destcolnum].getSize() == 0)
+		{//allow for kings dropping on to empty columns
+			if(cardNumber(column[srccolnum].getVal(column[srccolnum].getSize() - srccolcard)) % 12 == 0)
+			{
+				column[destcolnum].pushSection(column[srccolnum].popSection(srccolcard));
+				return 1;
+			}
+		} else if (isAllowed(column[srccolnum].getVal(column[srccolnum].getSize() - srccolcard), column[destcolnum].getVal(column[destcolnum].getSize() - 1)))
+		{//normal card movement check
 			column[destcolnum].pushSection(column[srccolnum].popSection(srccolcard));
 			return 1;
 		} else return 0;
-	} else {
+	} else {//else if we're making a forced move
 		column[destcolnum].pushSection(column[srccolnum].popSection(srccolcard));
 		return 1;
 	}
@@ -124,10 +138,32 @@ int Board::getDeckRemaining()
 	return deck.getSize();
 }
 
+int Board::flipColumn(int col)
+{
+	column[col].flipOver();
+
+	return 1;
+}
+
 void Board::draw()
 {
-	for(int i = 0; i < drawNumber; i++)
-		deckdiscard.setCard(deck.getCard(), 1);
+	int card;
+	deque<int> deckpile;
+
+	if(deck.getSize() != 0)
+	{
+		for(int i = 0; i < drawNumber; i++)
+		{
+			card = deck.getCard();
+			if(card != -1)
+				deckdiscard.setCard(card, 1);
+		}
+	} else {
+		deckpile = deckdiscard.popSection(deckdiscard.getSize() - 1);
+
+		for(int i = deckpile.size() - 1; i <= deckpile.size(); i--)
+			deck.pushCard(deckpile[i]);
+	}
 }
 
 void Board::putUp(int cardnum, int col_num)

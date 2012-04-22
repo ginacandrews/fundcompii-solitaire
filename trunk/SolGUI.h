@@ -42,8 +42,8 @@ protected:
 	void resizeEvent(QResizeEvent*);
 private:
 	void setUpSnapLocs();
-	QSize snapCardPos(QSize loc);
 	void getCardSelectLoc(int, int);
+	void returnCards();
 
 	Board board;
 	QSize *snapLocs;
@@ -60,6 +60,7 @@ private:
 	//Drag variables
 	int mouseDown;
 	int movingFrom;
+	int movingFromType;
 	int dragx;
 	int dragy;
 };
