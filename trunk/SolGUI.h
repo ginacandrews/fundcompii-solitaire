@@ -40,6 +40,7 @@ protected:
 	void mouseMoveEvent(QMouseEvent*);
 	void mouseReleaseEvent(QMouseEvent*);
 	void resizeEvent(QResizeEvent*);
+	void mouseDoubleClickEvent(QMouseEvent*);
 private:
 	void setUpSnapLocs();
 	void getCardSelectLoc(int, int);
@@ -47,12 +48,14 @@ private:
 
 	Board board;
 	QSize *snapLocs;
+	QSize *suitsnapLocs;
 	QSize deckLoc;
 	QSize *topLocs;
 	string cardValue(const int);
 	string cardSuit(const int);
 	QImage *cardImage;
 	QImage *cardBack;
+	QImage *suitBack;
 	int screenWidth;
 	int screenHeight;
 	float ratio;

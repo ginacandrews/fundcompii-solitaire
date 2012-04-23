@@ -33,6 +33,7 @@ using namespace std;
 SolGUI::SolGUI()
 {
 	cardImage = new QImage[52];
+	suitBack = new QImage[5];
 	cardBack = new QImage;
 
 	this->setStyleSheet("background-color: darkgreen;");
@@ -73,15 +74,16 @@ void SolGUI::paintEvent(QPaintEvent*)
 	}
 
 	//draw deck discard
-	//for(int i = board.getDeckDiscard().getSize()-3; i < board.getDeckDiscard().getSize(); i++)
-		//qpainter.drawImage(deckLoc.width()*ratio+170*ratio+(i-(board.getDeckDiscard().getSize()-3))*35*ratio-((cardBack->width())/2), deckLoc.height()*ratio-((cardBack->height())/2), cardImage[board.getDeckDiscard().getVal(i)]);
-
 	for(int i = 0; i < board.getDeckDiscard().getSize(); i++)
 		qpainter.drawImage(deckLoc.width()*ratio+170*ratio+i*35*ratio-((cardBack->width())/2), deckLoc.height()*ratio-((cardBack->height())/2), cardImage[board.getDeckDiscard().getVal(i)]);
 
 	//draw each suit pile top card
 	for(int i = 1; i < 5; i++)
-		//a
+	{
+		qpainter.drawImage(suitsnapLocs[i].width()*ratio-((cardBack->width())/2), suitsnapLocs[i].height()*ratio-((cardBack->height())/2), suitBack[i]);
+		if(board.getSuitPile(i).getSize() != 0)
+			qpainter.drawImage(suitsnapLocs[i].width()*ratio-((cardBack->width())/2), suitsnapLocs[i].height()*ratio-((cardBack->height())/2), cardImage[board.getSuitPile(i).getVal(board.getSuitPile(i).getSize() - 1)]);
+	}
 
 	//draw deck location
 	if (board.getDeckRemaining() > 0)
@@ -99,9 +101,13 @@ void SolGUI::paintEvent(QPaintEvent*)
 void SolGUI::setUpSnapLocs()
 {//sets up an array of static locations on the field where cards should go
 	snapLocs = new QSize[9];
+	suitsnapLocs = new QSize[5];
 
 	for(int i = 1; i < 8; i++)
 		snapLocs[i] = QSize(100+170*(i-1), 370);
+
+	for(int i = 1; i < 5; i++)
+		suitsnapLocs[i] = QSize(610+170*(i-1), 125);
 
 	deckLoc = QSize(115, 125); //deck
 
@@ -126,6 +132,28 @@ void SolGUI::mouseMoveEvent(QMouseEvent *e)
 	dragx = e->x();
 	dragy = e->y();
 	update();
+}
+
+void SolGUI::mouseDoubleClickEvent(QMouseEvent *e)
+{
+	CardColumn cardColumn;
+	int x = e->x();
+	int y = e->y();
+
+	if (e->button() == Qt::LeftButton) {
+
+		for(int i = 1; i < 8; i++) //There are better ways to do this than an iterative approach, but it works just as well.
+		{
+			cardColumn = board.getColumn(i);
+			for(int j = (((cardColumn.getSize()-1) == -1) ? 0 : cardColumn.getSize()-1); j >= 0; j--)
+				if(x < (snapLocs[i].width()*ratio+(cardBack->width()/2)) && x > (snapLocs[i].width()*ratio-(cardBack->width()/2))
+					&& y < (snapLocs[i].height()*ratio+j*35*ratio+(cardBack->height()/2)) && y > (snapLocs[i].height()*ratio+j*35*ratio-(cardBack->height()/2)))
+				{
+					if(j == cardColumn.getSize()-1)
+						board.putUp(board.getColumn(i).getVal(j), i);
+				}
+		}
+	}
 }
 
 void SolGUI::mouseReleaseEvent(QMouseEvent *e)
@@ -165,6 +193,16 @@ void SolGUI::getCardSelectLoc(int x, int y)
 			board.moveCards(8, 1, 0, 0);
 			return;
 		}
+
+		//if we're on one of the discard piles
+		for(int i = 1; i < 5; i++)
+		{
+			if(x < suitsnapLocs[i].width()*ratio+((cardBack->width())/2) && x > suitsnapLocs[i].width()*ratio-((cardBack->width())/2)
+				&& y < suitsnapLocs[i].height()*ratio+((cardBack->height())/2) && y > suitsnapLocs[i].height()*ratio-((cardBack->height())/2))
+				if(board.getColumn(0).getSize() == 1)
+					board.putUp(board.getColumn(0).getVal(0), 0);
+		}
+
 
 	//if we click on a column
 	for(int i = 1; i < 8; i++) //There are better ways to do this than an iterative approach, but it works just as well.
@@ -234,7 +272,7 @@ void SolGUI::resizeEvent(QResizeEvent *e)
 
 	ratio = .7f*float(e->size().height() / float(768));
 
-	QSize size(150*ratio, 217*ratio);
+	QSize size(150*ratio, 215*ratio);
 
 	for(int i = 0; i < 52; i++)
 	{
@@ -244,6 +282,15 @@ void SolGUI::resizeEvent(QResizeEvent *e)
 	}
 
 	cardBack->load("resources/back-red-150-1.png");
+
+	suitBack[1].load("resources/diamonds.png");
+	suitBack[2].load("resources/clubs.png");
+	suitBack[3].load("resources/hearts.png");
+	suitBack[4].load("resources/spades.png");
+
+	for(int i = 1; i < 5; i++)
+		suitBack[i] = suitBack[i].scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+	
 	*cardBack = cardBack->scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
 	screenWidth = e->size().width();

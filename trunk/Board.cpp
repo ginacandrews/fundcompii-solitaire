@@ -42,12 +42,7 @@ void Board::deal(){
 			column[i].setCard(deck.getCard(),flp);
 		}
 	}
-deque <int> tempdeck;
-tempdeck.push_front(-1);
-suitpiles[1].pushSection(tempdeck);
-suitpiles[2].pushSection(tempdeck);
-suitpiles[3].pushSection(tempdeck);
-suitpiles[4].pushSection(tempdeck);
+
 	drawNumber = 3;
 }
 
@@ -87,7 +82,7 @@ int Board::isAllowed(int top, int bottom){ //returns 1 if move from top to botto
 int Board::moveCards(int srccolnum, int srccolcard, int destcolnum, int safe){ //copies sourcecolumn starting at srccolcard deep to destcol
 
 
-	if(srccolnum == 8)
+	if(srccolnum == 8) //moving to and from the deck
 	{
 		column[destcolnum].pushSection(deckdiscard.popSection(srccolcard));
 	} else if (destcolnum == 8)
@@ -175,17 +170,30 @@ void Board::draw()
 
 }
 
-void Board::putUp(int cardnum, int col_num)
+int Board::putUp(int cardnum, int col_num)
 {
-deque<int> temp;
-temp.push_back(cardnum%13);
 	int suit;
-	if (cardnum/13>=0) suit = 1;
-	if (cardnum/13>=1) suit = 2;
-	if (cardnum/13>=2) suit = 3;
-	if (cardnum/13>=3) suit = 4;
 
-	if (cardnum%13==suitpiles[suit].getVal(suitpiles[suit].getSize())+1) suitpiles[suit].pushSection(column[col_num].popSection(1));
+	if (cardnum/13>=0) suit = 1; //diamonds
+	if (cardnum/13>=1) suit = 2; //clubs
+	if (cardnum/13>=2) suit = 3; //hearts
+	if (cardnum/13>=3) suit = 4; //spades
 
+	if(suitpiles[suit].getSize() == 0)
+	{
+		if(cardnum % 13 == 0)
+		{
+			suitpiles[suit].pushSection(column[col_num].popSection(1));
+			return 1;
+		}
+	} else {
+		if (cardnum%13==suitpiles[suit].getVal(suitpiles[suit].getSize())+1)
+		{
+			suitpiles[suit].pushSection(column[col_num].popSection(1));
+			return 1;
+		}
+	}
+
+	return 0;
 }
 
