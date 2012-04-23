@@ -42,7 +42,7 @@ public:
 	void setColumn(CardColumn,int);	//sets cardcolumn # int
 	void draw();
 	int getDeckRemaining();
-	void putUp(int,int);
+	int putUp(int,int);
 	int flipColumn(int column);
 
 private: 
