@@ -187,7 +187,7 @@ int Board::putUp(int cardnum, int col_num)
 			return 1;
 		}
 	} else {
-		if (cardnum%13==suitpiles[suit].getVal(suitpiles[suit].getSize())+1)
+		if (cardnum%13 == (suitpiles[suit].getVal(suitpiles[suit].getSize()-1) % 13)+1)
 		{
 			suitpiles[suit].pushSection(column[col_num].popSection(1));
 			return 1;
