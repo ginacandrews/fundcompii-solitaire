@@ -39,7 +39,7 @@ SolGUI::SolGUI()
 	this->setStyleSheet("background-color: darkgreen;");
 
 	setWindowTitle(tr("Solitaire GUI"));
-	resize(1024, 768);
+	resize(900, 600);
 
 	//image loading code in resize function, since we just called it, and it will be called to rescale the images
 
@@ -269,8 +269,15 @@ void SolGUI::resizeEvent(QResizeEvent *e)
 {
 	QString filename;
 	string file;
+	float heightratio, widthratio;
 
-	ratio = .7f*float(e->size().height() / float(768));
+	heightratio = .7f*float(e->size().height() / float(600));
+	widthratio = .7f*float(e->size().width() / float(900));
+
+	if (heightratio < widthratio)
+		ratio = heightratio;
+	else
+		ratio = widthratio;
 
 	QSize size(150*ratio, 215*ratio);
 
