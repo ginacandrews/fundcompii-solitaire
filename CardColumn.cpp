@@ -38,7 +38,7 @@ void CardColumn::setCard(int card, int flp){
 }
 
 
-void CardColumn::print(){
+void CardColumn::print(){  //prints out card numberes, for testing purposes only
 	for (int i=0; i<value.size(); i++){
 		cout<<"("<<value[i]<<","<<flip[i]<<")";
 		//if (flip[i]==0) cout<<"X  ";
@@ -46,7 +46,7 @@ void CardColumn::print(){
 	}
 }
 
-void CardColumn::flipOver(){
+void CardColumn::flipOver(){ //flips over card if the last card is unflipped, unused 
 	if(flip.back()==0) {
 		flip.pop_back();
 		flip.push_back(1);
@@ -57,12 +57,12 @@ int CardColumn::getVal(int position){ //returns value at position
 	return(value[position]);
 }
 
-int CardColumn::getFlip(int position)
+int CardColumn::getFlip(int position)  //gets flip value of position
 {
 	return(flip[position]);
 }
 
-deque<int> CardColumn::popSection(int numDeep){
+deque<int> CardColumn::popSection(int numDeep){  //pops out a selection of cards, from the last card to numdeep, used for moving cards
 	deque<int> tempSection;
 	for (int i = 0; i < numDeep; i++)
 	{
@@ -73,7 +73,7 @@ deque<int> CardColumn::popSection(int numDeep){
 	return tempSection;
 }
 
-void CardColumn::pushSection(deque<int> section){
+void CardColumn::pushSection(deque<int> section){  //pushes multiple cards into a deque, used for moving cards
 
 	while(section.size() > 0)
 	{
