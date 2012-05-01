@@ -47,7 +47,7 @@ void CardDeck::shuffle()
 	random_shuffle(Deck.begin(),Deck.end());
 }
 
-void CardDeck::newDeck()
+void CardDeck::newDeck()  
 {
 	int oldDeckSize = Deck.size();
 	Deck.clear();
@@ -56,7 +56,7 @@ void CardDeck::newDeck()
 	}
 }
 
-int CardDeck::getCard()
+int CardDeck::getCard()  //returns card
 {
 	if(Deck.size() > 0)
 	{
@@ -66,7 +66,7 @@ int CardDeck::getCard()
 	} else return -1;
 }
 
-void CardDeck::pushCard(const int card)
+void CardDeck::pushCard(const int card)  //pushes card into deck
 {
 	Deck.push_back(card);
 }

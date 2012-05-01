@@ -18,7 +18,7 @@
 //    You should have received a copy of the GNU General Public License       //
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.   //
 ////////////////////////////////////////////////////////////////////////////////
-//hello
+
 #include<iostream>
 #include<deque>
 
@@ -35,18 +35,18 @@ void Board::deal(){
 	int flp=0;
 	deck.newDeck();
 	deck.shuffle();
-	for (int i = 7; i> 0; i--){
+	for (int i = 7; i> 0; i--){  //these two loops set the starting columns.
 		for (int j = 0; j<i; j++){
-			if (j==i-1) flp=1;
+			if (j==i-1) flp=1; //flips over last card
 			else flp=0;
-			column[i].setCard(deck.getCard(),flp);
+			column[i].setCard(deck.getCard(),flp); //sets column card here
 		}
 	}
 
-	drawNumber = 3;
+	drawNumber = 3; //how many cards the draw stack flips at a time
 }
 
-void Board::print(){
+void Board::print(){  //this code was used to test in the terminal, no longer used
 	for(int i=7; i>0; i--){
 		cout<<"column "<<i<<":";
 		column[i].print();
@@ -54,7 +54,7 @@ void Board::print(){
 	}
 }
 
-int Board::cardNumber(const int cardnum){ //returns card value as num 
+int Board::cardNumber(const int cardnum){ //returns card value as num (0-12)
 	int num = cardnum%13;	
 	return(num);
 }
@@ -170,7 +170,7 @@ void Board::draw()
 
 }
 
-int Board::putUp(int cardnum, int col_num)
+int Board::putUp(int cardnum, int col_num)  //this funtion checks if a card can be moved to a foundation, and moves it if possible.
 {
 	int suit;
 
@@ -178,6 +178,7 @@ int Board::putUp(int cardnum, int col_num)
 	if (cardnum/13>=1) suit = 2; //clubs
 	if (cardnum/13>=2) suit = 3; //hearts
 	if (cardnum/13>=3) suit = 4; //spades
+	
 
 	if(suitpiles[suit].getSize() == 0)
 	{
