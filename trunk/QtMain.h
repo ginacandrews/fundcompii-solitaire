@@ -16,7 +16,9 @@ public:
 
 public Q_SLOTS:
 	void redealTrigger();
+	void undoTrigger();
 	void updateStatus();
+	void updateOneSec();
 	void changeBack(int);
 
 private:
@@ -25,9 +27,12 @@ private:
 	
 	QSignalMapper * signalMapper;
 	QTimer * statusLoopTimer;
+	QTimer * oneSecTimer;
 	SolGUI * SolGUIptr;
 	QMenu * cardBackMenu;
+
 	QAction * redealAct;
+	QAction * undoAct;
 	vector<QAction*> backAct;
 };
 

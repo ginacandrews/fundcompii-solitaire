@@ -38,9 +38,11 @@ SolGUI::SolGUI()
 	cardImage = new QImage[52];
 	suitBack = new QImage[5];
 	cardBack = new QImage;
+	deckBlank = new QImage;
 	origcardImage = new QImage[52];
 	origsuitBack = new QImage[5];
 	origcardBack = new QImage;
+	origdeckBlank = new QImage;
 
 	cardBackNumber = 1;
 
@@ -83,6 +85,17 @@ void SolGUI::redeal()
 	update();
 }
 
+void SolGUI::undo()
+{
+	board->undo();
+	update();
+}
+
+void SolGUI::incrementPlayerTime()
+{
+	board->incrementPlayerTime();
+}
+
 int SolGUI::getPlayerScore()
 {
 	return board->getDeckRemaining();
@@ -91,7 +104,7 @@ int SolGUI::getPlayerScore()
 
 int SolGUI::getPlayedTime()
 {
-	return board->getDeckRemaining();
+	return board->getPlayerTime();
 	//return board->getPlayedTime();
 }
 
@@ -122,25 +135,27 @@ void SolGUI::paintEvent(QPaintEvent*)
 	}
 
 	//draw deck discard
-	for(int i = 0; i < board->getDeckDiscard().getSize(); i++)
-		qpainter.drawImage(deckLoc.width()*ratio+170*ratio+i*35*ratio-((cardBack->width())/2), deckLoc.height()*ratio-((cardBack->height())/2), cardImage[board->getDeckDiscard().getVal(i)]);
+	for(int i = 0; i < board->getColumn(DECK_DISCARD).getSize(); i++)
+		qpainter.drawImage(deckLoc.width()*ratio+170*ratio+i*35*ratio-((cardBack->width())/2), deckLoc.height()*ratio-((cardBack->height())/2), cardImage[board->getColumn(DECK_DISCARD).getVal(i)]);
 
 	//draw each suit pile top card
 	for(int i = 1; i < 5; i++)
 	{
 		qpainter.drawImage(suitsnapLocs[i].width()*ratio-((cardBack->width())/2), suitsnapLocs[i].height()*ratio-((cardBack->height())/2), suitBack[i]);
-		if(board->getSuitPile(i).getSize() != 0)
-			qpainter.drawImage(suitsnapLocs[i].width()*ratio-((cardBack->width())/2), suitsnapLocs[i].height()*ratio-((cardBack->height())/2), cardImage[board->getSuitPile(i).getVal(board->getSuitPile(i).getSize() - 1)]);
+		if(board->getColumn(SUITPILE_OFFSET+i).getSize() != 0)
+			qpainter.drawImage(suitsnapLocs[i].width()*ratio-((cardBack->width())/2), suitsnapLocs[i].height()*ratio-((cardBack->height())/2), cardImage[board->getColumn(SUITPILE_OFFSET+i).getVal(board->getColumn(SUITPILE_OFFSET+i).getSize() - 1)]);
 	}
 
 	//draw deck location
 	if (board->getDeckRemaining() > 0)
 		qpainter.drawImage(deckLoc.width()*ratio-((cardBack->width())/2), deckLoc.height()*ratio-((cardBack->height())/2), *cardBack);
+	else
+		qpainter.drawImage(deckLoc.width()*ratio-((deckBlank->width())/2), deckLoc.height()*ratio-((deckBlank->height())/2), *deckBlank);
 
 	//if mouse is held down, draw the stack we could be holding.
 	if(mouseDown) 
 	{
-		cardColumn = board->getColumn(0);
+		cardColumn = board->getColumn(PLAYER_HAND);
 		for(int i = 0; i < cardColumn.getSize(); i++)
 			qpainter.drawImage(dragx-((cardImage[cardColumn.getVal(i)].width())/2), dragy+i*35*ratio-((cardImage[cardColumn.getVal(i)].height())/2), cardImage[cardColumn.getVal(i)]);
 	}
@@ -164,13 +179,13 @@ void SolGUI::setUpSnapLocs()
 void SolGUI::mousePressEvent(QMouseEvent *e)
 {
 	if (e->button() == Qt::LeftButton) {
+		setCursor(Qt::ClosedHandCursor);
 		mouseDown = 1;
 		dragx = e->x();
 		dragy = e->y();
 		getCardSelectLoc(e->x(), e->y()); //pushes cards in to the "holding vector"
 	}
 
-	e->accept();
 	update();
 }
 
@@ -196,20 +211,13 @@ void SolGUI::mouseDoubleClickEvent(QMouseEvent *e)
 			for(int j = (((cardColumn.getSize()-1) == -1) ? 0 : cardColumn.getSize()-1); j >= 0; j--)
 				if(x < (snapLocs[i].width()*ratio+(cardBack->width()/2)) && x > (snapLocs[i].width()*ratio-(cardBack->width()/2))
 					&& y < (snapLocs[i].height()*ratio+j*35*ratio+(cardBack->height()/2)) && y > (snapLocs[i].height()*ratio+j*35*ratio-(cardBack->height()/2)))
-				{
-					if(j == cardColumn.getSize()-1)
-						board->putUp(board->getColumn(i).getVal(j), i);
-				}
+					board->putUp(i);
 		}
 
-	int i = (((board->getDeckDiscard().getSize() % 3) == 0) ? 3 : board->getDeckDiscard().getSize() % 3);
-	if(x < deckLoc.width()*ratio+170*ratio+i*35*ratio+((cardBack->width())/2) && x > deckLoc.width()*ratio+170*ratio+i*35*ratio-((cardBack->width())/2)
-		&& y > deckLoc.height()*ratio-((cardBack->height())/2) && y < deckLoc.height()*ratio+((cardBack->height())/2))
-		{
-			movingFromType = 1;
-			board->putUp(board->getColumn(8).getVal(board->getColumn(8).getSize()-1), 8);
-			return;
-		}
+		int i = (((board->getColumn(DECK_DISCARD).getSize() % 3) == 0) ? 3 : board->getColumn(DECK_DISCARD).getSize() % 3);
+		if(x < deckLoc.width()*ratio+170*ratio+i*35*ratio+((cardBack->width())/2) && x > deckLoc.width()*ratio+170*ratio+i*35*ratio-((cardBack->width())/2)
+			&& y > deckLoc.height()*ratio-((cardBack->height())/2) && y < deckLoc.height()*ratio+((cardBack->height())/2))
+			board->putUp(DECK_DISCARD);
 
 	}
 }
@@ -223,6 +231,7 @@ void SolGUI::mouseReleaseEvent(QMouseEvent *e)
 		mouseDown = 0;
 		getCardSelectLoc(e->x(), e->y());
 	}
+
 	update();
 }
 
@@ -230,6 +239,8 @@ void SolGUI::getCardSelectLoc(int x, int y)
 {
 	CardColumn cardColumn;
 	CardColumn emptyColumn;
+	int columnNumber = -1;
+	int depthInColumn = -1;
 
 	//if we click the deck
 	if(x < deckLoc.width()*ratio+(cardBack->width()/2) && x > deckLoc.width()*ratio-(cardBack->width()/2)
@@ -241,84 +252,44 @@ void SolGUI::getCardSelectLoc(int x, int y)
 	}
 
 	//if we click the deck discard pile
-	int i = (((board->getDeckDiscard().getSize() % 3) == 0) ? 3 : board->getDeckDiscard().getSize() % 3);
+	int i = (((board->getColumn(DECK_DISCARD).getSize() % 3) == 0) ? 3 : board->getColumn(DECK_DISCARD).getSize() % 3);
 	if(x < deckLoc.width()*ratio+170*ratio+i*35*ratio+((cardBack->width())/2) && x > deckLoc.width()*ratio+170*ratio+i*35*ratio-((cardBack->width())/2)
 		&& y > deckLoc.height()*ratio-((cardBack->height())/2) && y < deckLoc.height()*ratio+((cardBack->height())/2))
-		if(mouseDown) //selecting
-		{
-			movingFromType = 1;
-			board->moveCards(8, 1, 0, 0);
-			return;
-		}
+	{
+		columnNumber = DECK_DISCARD;
+		depthInColumn = board->getColumn(DECK_DISCARD).getSize() - 1;
+	}
 
-		//if we're on one of the discard piles
-		for(int i = 1; i < 5; i++)
+	//if we're on one of the discard piles
+	for(int i = 1; i < 5; i++)
+		if(x < suitsnapLocs[i].width()*ratio+((cardBack->width())/2) && x > suitsnapLocs[i].width()*ratio-((cardBack->width())/2)
+			&& y < suitsnapLocs[i].height()*ratio+((cardBack->height())/2) && y > suitsnapLocs[i].height()*ratio-((cardBack->height())/2))
 		{
-			if(x < suitsnapLocs[i].width()*ratio+((cardBack->width())/2) && x > suitsnapLocs[i].width()*ratio-((cardBack->width())/2)
-				&& y < suitsnapLocs[i].height()*ratio+((cardBack->height())/2) && y > suitsnapLocs[i].height()*ratio-((cardBack->height())/2))
-				if(board->getColumn(0).getSize() == 1)
-					board->putUp(board->getColumn(0).getVal(0), 0);
+			columnNumber = SUITPILE_OFFSET+i;
+			depthInColumn = board->getColumn(SUITPILE_OFFSET+i).getSize()-1;
 		}
-
 
 	//if we click on a column
 	for(int i = 1; i < 8; i++) //There are better ways to do this than an iterative approach, but it works just as well.
 	{
 		cardColumn = board->getColumn(i);
-
-		for(int j = (((cardColumn.getSize()-1) == -1) ? 0 : cardColumn.getSize()-1); j >= 0; j--)
+		for(int j = (((cardColumn.getSize()-1) == -1) ? 0 : cardColumn.getSize()-1); j >= 0 && (columnNumber == -1); j--)
+		{
 			if(x < (snapLocs[i].width()*ratio+(cardBack->width()/2)) && x > (snapLocs[i].width()*ratio-(cardBack->width()/2))
 				&& y < (snapLocs[i].height()*ratio+j*35*ratio+(cardBack->height()/2)) && y > (snapLocs[i].height()*ratio+j*35*ratio-(cardBack->height()/2)))
-			{
-				//At this point, i will be the column number (from the left) and j will be the depth in that column.
-
-				if(mouseDown)
-				{//we're selecting a fresh stack.
-					if(cardColumn.getSize() > 0)
-					{
-						cardColumn=board->getColumn(i);
-						if(cardColumn.getFlip(j)) //if this is a valid selection
-						{
-							board->moveCards(i, cardColumn.getSize()-j, 0, 0);
-							movingFromType = 0;
-							movingFrom=i;
-						} else {
-							board->flipColumn(i);
-						}
-					}
-				}
-				else
-				{//we might be dropping a stack
-					cardColumn=board->getColumn(0);
-					//////////////BUG//////write in if(holding cards) check here
-					if(!board->moveCards(0, cardColumn.getSize(), i, 1))  //try to move cards to the stack we're over
-						returnCards(); //if that doesn't work, pop them back where they came from
-				}
-				return;
+			{	//At this point, i will be the column number (from the left) and j will be the depth in that column.
+				columnNumber = i;
+				depthInColumn = j;
 			}
-	}
-
-	//we only get to this point if we didn't find a valid stack to pull from or drop on.
-	returnCards();
-
-}
-
-void SolGUI::returnCards()
-{
-
-	CardColumn cardColumn=board->getColumn(0);
-	if (!mouseDown && cardColumn.getSize() > 0)
-	{
-		switch(movingFromType)
-		{
-		case 0:
-			board->moveCards(0, cardColumn.getSize(), movingFrom, 0);
-			break;
-		case 1:
-			board->moveCards(0, 1, 8, 0);
-			break;
 		}
 	}
+
+	if(mouseDown)
+	{
+		if(columnNumber != -1 && depthInColumn != -1)
+			board->pickCards(columnNumber, depthInColumn);
+	} else board->dropCards(columnNumber, depthInColumn);
+
 
 }
 
@@ -351,6 +322,7 @@ void SolGUI::rescaleAssets()
 		cardImage[i] = origcardImage[i].scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 	
 	*cardBack = origcardBack->scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+	*deckBlank = origdeckBlank->scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 }
 
 void SolGUI::reloadAssets()
@@ -367,6 +339,8 @@ void SolGUI::reloadAssets()
 	ss.str("");
 	ss << "resources/back-" << (((cardBackNumber-1)/4) > 0 ? "blue" : "red") <<"-150-" << ((cardBackNumber%4 == 0) ? 4 : cardBackNumber%4) << ".png";
 	origcardBack->load(ss.str().c_str());
+
+	origdeckBlank->load("resources/deckblank.png");
 
 	origsuitBack[1].load("resources/diamonds.png");
 	origsuitBack[2].load("resources/clubs.png");

@@ -39,6 +39,8 @@ public:
 	SolGUI();
 	~SolGUI();
 	void redeal();
+	void undo();
+	void incrementPlayerTime();
 	int getPlayerScore();
 	int getPlayedTime();
 	void changeCardBack(int);
@@ -66,9 +68,12 @@ private:
 	QImage *origcardImage;
 	QImage *origcardBack;
 	QImage *origsuitBack;
+	QImage *origdeckBlank;
+
 	QImage *cardImage;
 	QImage *cardBack;
 	QImage *suitBack;
+	QImage *deckBlank;
 
 	string cardValue(const int);
 	string cardSuit(const int);
@@ -81,8 +86,6 @@ private:
 
 	//Drag variables
 	int mouseDown;
-	int movingFrom;
-	int movingFromType;
 	int dragx;
 	int dragy;
 };

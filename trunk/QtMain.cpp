@@ -30,6 +30,9 @@ SolMainWindow::SolMainWindow()
 	statusLoopTimer = new QTimer;
 	statusLoopTimer->start(500);
 	connect(statusLoopTimer, SIGNAL(timeout()), this, SLOT(updateStatus()));
+	oneSecTimer = new QTimer;
+	oneSecTimer->start(1000);
+	connect(oneSecTimer, SIGNAL(timeout()), this, SLOT(updateOneSec()));
 
 }
 
@@ -37,16 +40,24 @@ SolMainWindow::~SolMainWindow()
 {
 	delete SolGUIptr;
 	delete signalMapper;
+	delete oneSecTimer;
+	delete statusLoopTimer;
 }
 
 void SolMainWindow::updateStatus()
 {
 	stringstream ss;
 
-	ss << "Score: " << SolGUIptr->getPlayerScore() << "      Time: " << SolGUIptr->getPlayedTime();
+	ss << "Score(not working yet): " << SolGUIptr->getPlayerScore() << "      Time: " << SolGUIptr->getPlayedTime();
 	statusBar()->showMessage(QString(ss.str().c_str()));
 
 	statusLoopTimer->start(20);
+}
+
+void SolMainWindow::updateOneSec()
+{
+	SolGUIptr->incrementPlayerTime();
+	oneSecTimer->start(1000);
 }
 
 void SolMainWindow::createMenus()
@@ -54,6 +65,7 @@ void SolMainWindow::createMenus()
 	menuBar()->setStyleSheet("background-color: gray;");
 
 	menuBar()->addAction(redealAct);
+	menuBar()->addAction(undoAct);
 	cardBackMenu = menuBar()->addMenu(tr("&Card Backs"));
 	cardBackMenu->setPalette(*(new QPalette(Qt::gray)));
 	for(unsigned int i = 0; i < backAct.size(); i++)
@@ -69,10 +81,14 @@ void SolMainWindow::createActions()
 	redealAct = new QAction(tr("&ReDeal"), this);
 	connect(redealAct, SIGNAL(triggered()), this, SLOT(redealTrigger()));
 
+	undoAct = new QAction(tr("&Undo"), this);
+	undoAct->setShortcuts(QKeySequence::Undo);
+	connect(undoAct, SIGNAL(triggered()), this, SLOT(undoTrigger()));
+
 	//All of the follow is the signal mapping code for the card back menu
 	//  items.  We have to use a signal mapper because Qt's SIGNAL->SLOT
 	//  ability sucks.
-	for(int i = 0; i < backAct.size(); i++)
+	for(unsigned int i = 0; i < backAct.size(); i++)
 	{//map each menu action to a signal
 		ss.str("");
 		ss << ((i/4) > 0 ? "Blue" : "Red") << " Card Back " << i+1;
@@ -99,4 +115,9 @@ void SolMainWindow::changeBack(int backnumber)
 void SolMainWindow::redealTrigger()
 {
 	SolGUIptr->redeal();
+}
+
+void SolMainWindow::undoTrigger()
+{
+	SolGUIptr->undo();
 }
