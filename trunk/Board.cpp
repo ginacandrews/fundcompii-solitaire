@@ -82,8 +82,6 @@ void Board::deal()
 			column[i].setCard(deck.getCard(),flp); //sets column card here
 		}
 	}
-
-	drawNumber = 3; //how many cards the draw stack flips at a time
 }
 
 void Board::setDrawNumber(int number)
