@@ -85,6 +85,16 @@ void SolGUI::redeal()
 	update();
 }
 
+void SolGUI::setDrawNumber1()
+{
+	board->setDrawNumber(1);
+}
+
+void SolGUI::setDrawNumber3()
+{
+	board->setDrawNumber(3);
+}
+
 void SolGUI::undo()
 {
 	board->undo();
@@ -288,7 +298,7 @@ void SolGUI::getCardSelectLoc(int x, int y)
 	{
 		if(columnNumber != -1 && depthInColumn != -1)
 			board->pickCards(columnNumber, depthInColumn);
-	} else board->dropCards(columnNumber, depthInColumn);
+	} else board->dropCards(columnNumber);
 
 
 }

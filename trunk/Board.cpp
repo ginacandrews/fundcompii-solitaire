@@ -50,7 +50,8 @@ int Board::getPlayerTime()
 	return playerTime;
 }
 
-void Board::deal(){
+void Board::deal()
+{
 	int flp=0;
 	deck.newDeck();
 	deck.shuffle();
@@ -63,6 +64,11 @@ void Board::deal(){
 	}
 
 	drawNumber = 3; //how many cards the draw stack flips at a time
+}
+
+void Board::setDrawNumber(int number)
+{
+	drawNumber = number;
 }
 
 int Board::cardNumber(const int cardnum){ //returns card value as num (0-12)
@@ -113,7 +119,7 @@ int Board::pickCards(int colnum, int depth)
 	return 1;
 }
 
-int Board::dropCards(int colnum, int depth)
+int Board::dropCards(int colnum)
 {
 
 	if(colnum == -1)

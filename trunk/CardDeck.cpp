@@ -30,7 +30,7 @@
 using namespace std;
 
 CardDeck::CardDeck(const int n)
-{ //non-default constructor
+{//non-default constructor
 	for(int i=0; i < n; i++){
 		Deck.push_back(i);
 	}
@@ -38,17 +38,17 @@ CardDeck::CardDeck(const int n)
 }
 
 int CardDeck::getSize()
-{ //returns current deck size
+{//returns current deck size
 	return(Deck.size());
 }
 
 void CardDeck::shuffle()
-{ //shuffles cards
+{//shuffles cards
 	random_shuffle(Deck.begin(),Deck.end());
 }
 
 void CardDeck::newDeck()  
-{
+{//starts
 	int oldDeckSize = Deck.size();
 	Deck.clear();
 	for(int i=0; i<oldDeckSize; i++){ 
@@ -56,8 +56,8 @@ void CardDeck::newDeck()
 	}
 }
 
-int CardDeck::getCard()  //returns card
-{
+int CardDeck::getCard()
+{//returns card
 	if(Deck.size() > 0)
 	{
 		int card = Deck.front();
@@ -66,7 +66,7 @@ int CardDeck::getCard()  //returns card
 	} else return -1;
 }
 
-void CardDeck::pushCard(const int card)  //pushes card into deck
-{
+void CardDeck::pushCard(const int card)
+{//pushes card into deck
 	Deck.push_back(card);
 }

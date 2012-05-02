@@ -27,42 +27,37 @@
 
 using namespace std;
 
-CardColumn::CardColumn(){
+CardColumn::CardColumn()
+{
+
 }
 
-void CardColumn::setCard(int card, int flp){
-	//cout<<card<<" "<<flp<<endl;
+void CardColumn::setCard(int card, int flp)
+{//pushes back a card number and flap value
 	value.push_back(card);
 	flip.push_back(flp);
-
 }
 
-
-void CardColumn::print(){  //prints out card numberes, for testing purposes only
-	for (unsigned int i=0; i<value.size(); i++){
-		cout<<"("<<value[i]<<","<<flip[i]<<")";
-		//if (flip[i]==0) cout<<"X  ";
-		//else cout<<cardValue(value[i])<<" of "<<cardSuit(value[i]);
-	}
-}
-
-void CardColumn::flipOver(){ //flips over card if the last card is unflipped, unused 
+void CardColumn::flipOver()
+{//flips over card if the last card is unflipped, unused 
 	if(flip.back()==0) {
 		flip.pop_back();
 		flip.push_back(1);
 	}
 }
 
-int CardColumn::getVal(int position){ //returns value at position
+int CardColumn::getVal(int position)
+{//returns value at position
 	return(value[position]);
 }
 
-int CardColumn::getFlip(int position)  //gets flip value of position
-{
+int CardColumn::getFlip(int position)
+{//gets flip value of position
 	return(flip[position]);
 }
 
-deque<int> CardColumn::popSection(int numDeep){  //pops out a selection of cards, from the last card to numdeep, used for moving cards
+deque<int> CardColumn::popSection(int numDeep)
+{//pops out a selection of cards, from the last card to numdeep, used for moving cards
 	deque<int> tempSection;
 	for (int i = 0; i < numDeep; i++)
 	{
@@ -73,7 +68,8 @@ deque<int> CardColumn::popSection(int numDeep){  //pops out a selection of cards
 	return tempSection;
 }
 
-void CardColumn::pushSection(deque<int> section){  //pushes multiple cards into a deque, used for moving cards
+void CardColumn::pushSection(deque<int> section)
+{//pushes multiple cards into a deque, used for moving cards
 
 	while(section.size() > 0)
 	{
@@ -84,7 +80,8 @@ void CardColumn::pushSection(deque<int> section){  //pushes multiple cards into 
 
 }
 
-int CardColumn::getSize(){ //returns size of that column
+int CardColumn::getSize()
+{//returns size of that column
 	return(value.size());
 }
 

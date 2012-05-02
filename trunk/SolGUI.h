@@ -39,6 +39,8 @@ public:
 	SolGUI();
 	~SolGUI();
 	void redeal();
+	void setDrawNumber1();
+	void setDrawNumber3();
 	void undo();
 	void incrementPlayerTime();
 	int getPlayerScore();
