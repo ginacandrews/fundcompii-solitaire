@@ -26,33 +26,58 @@
 
 using namespace std;
 
-class Board{
+typedef struct
+{
+	int movingFrom;
+	int movingTo;
+	int numCards;
+	int undone;
+} undoInfo;
+
+enum
+{
+	PLAYER_HAND = 0,
+	DECK_DISCARD = 9,
+	OLD_DECK_DISCARD = 10,
+	SUITPILE_OFFSET = 10
+};
+
+class Board
+{
 
 public:
 	Board();
 	~Board();
 	void deal();			//deals out cards
-	void print();			//prints out all the columns
+	void draw();
+	void undo();
+	void incrementPlayerTime();
+	int getPlayerTime();
+	int getDeckRemaining();
+	CardColumn getColumn(int);	//returns cardcolumn 
+	int putUp(int); //(column)
+	int pickCards(int, int); //(column, depth)
+	int dropCards(int, int); //(column, depth)
+
+private: 
 	int isAllowed(int, int); 	//returns 1 if it's allowed 
 	int cardNumber(const int); 	//returns number of card (0 = Ace, 12=K)
 	int suitNum(const int);		//returns 1 for red, 0 for black
-	int moveCards(int, int, int, int); 	//copies contents of colsrc, cardnumber deep, into dest coldest, returns 1 if success
-	CardColumn getColumn(int);	//returns cardcolumn 
-	CardColumn getDeckDiscard();
-	CardColumn getSuitPile(int);
-	void setColumn(CardColumn,int);	//sets cardcolumn # int
-	void draw();
-	int getDeckRemaining();
-	int putUp(int,int);
-	int flipColumn(int column);
+	void makeMove(int, int);
 
-private: 
 	int drawNumber;
-	CardColumn column[8];
-	CardColumn deckdiscard;
-	CardColumn olddeckdiscard;
-	CardColumn suitpiles[5];
+	int movingFrom;
+	int playerTime;
+	//Cardcolumns
+	//0: Player hand
+	//1-7 Each of the card stacks
+	//8 not used
+	//9 Deck discarded.
+	//10 "Old" deck discarded.
+	//11-14 Foundation piles.
+	CardColumn column[15];
 	CardDeck deck;
+	undoInfo * undoinfo;
 };
 #endif
 
