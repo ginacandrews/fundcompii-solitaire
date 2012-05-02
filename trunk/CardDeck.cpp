@@ -31,10 +31,10 @@ using namespace std;
 
 CardDeck::CardDeck(const int n)
 { //non-default constructor
-	for(int i=0; i<n; i++){
+	for(int i=0; i < n; i++){
 		Deck.push_back(i);
 	}
-	srand(time(0));
+	srand(unsigned int(time(0)));
 }
 
 int CardDeck::getSize()

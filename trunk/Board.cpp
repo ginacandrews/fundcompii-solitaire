@@ -28,7 +28,14 @@
 
 using namespace std;
 
-Board::Board(){
+Board::Board()
+{
+
+}
+
+Board::~Board()
+{
+
 }
 
 void Board::deal(){
@@ -157,12 +164,12 @@ void Board::draw()
 	} else {
 		deckpile = olddeckdiscard.popSection(olddeckdiscard.getSize());
 
-		for(int i = deckpile.size() - 1; i <= deckpile.size(); i--)
+		for(unsigned int i = deckpile.size() - 1; i <= deckpile.size(); i--)
 			deck.pushCard(deckpile[i]);
 
 		deckpile = deckdiscard.popSection(deckdiscard.getSize());
 
-		for(int i = deckpile.size() - 1; i <= deckpile.size(); i--)
+		for(unsigned int i = deckpile.size() - 1; i <= deckpile.size(); i--)
 			deck.pushCard(deckpile[i]);
 
 		draw();

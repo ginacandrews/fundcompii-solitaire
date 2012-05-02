@@ -25,6 +25,7 @@
 #include <qgraphicsview.h>
 
 #include "SolGUI.h"
+#include "QtMain.h"
 #include <qwidget.h>
 
 using namespace std;
@@ -36,7 +37,8 @@ int main ( int argc, char *argv[] )
 	//QGraphicsView view(&scene);
 	//view.show();
 
-	SolGUI a;
+	//SolGUI a;
+	SolMainWindow a;
 
 	a.show();
 	return GUILoop.exec();
