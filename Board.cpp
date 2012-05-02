@@ -41,17 +41,17 @@ Board::~Board()
 }
 
 void Board::incrementPlayerTime()
-{
+{//called by SolGUI to increment the game time by 1
 	playerTime++;
 }
 
 int Board::getPlayerTime()
-{
+{//returns current game time
 	return playerTime;
 }
 
 void Board::deal()
-{
+{//deals out cards at the start of a new game
 	int flp=0;
 	deck.newDeck();
 	deck.shuffle();
@@ -67,16 +67,18 @@ void Board::deal()
 }
 
 void Board::setDrawNumber(int number)
-{
+{//sets the drawnumber (number of cards pulled out of the deck)
 	drawNumber = number;
 }
 
-int Board::cardNumber(const int cardnum){ //returns card value as num (0-12)
+int Board::cardNumber(const int cardnum)
+{//returns card value as num (0-12)
 	int num = cardnum%13;	
 	return(num);
 }
 
-int Board::suitNum(const int cardnum){ //returns suit number
+int Board::suitNum(const int cardnum)
+{//returns suit number
 	int suit; //0 = black, 1 = red
 	if (cardnum/13>=0) suit = 1; //if diamonds, suit = 1 for red
 	if (cardnum/13>=1) suit = 0; //if clubs, suit = 0
@@ -85,7 +87,8 @@ int Board::suitNum(const int cardnum){ //returns suit number
 	return (suit);
 }
 
-int Board::isAllowed(int top, int bottom){ //returns 1 if move from top to bottom is allowed
+int Board::isAllowed(int top, int bottom)
+{ //returns 1 if move from top to bottom is allowed
 	int topnum=cardNumber(top);
 	int bottomnum=cardNumber(bottom);
 	int topsuit=suitNum(top);
@@ -97,7 +100,7 @@ int Board::isAllowed(int top, int bottom){ //returns 1 if move from top to botto
 }
 
 int Board::pickCards(int colnum, int depth)
-{
+{//picks cards up out of colnum, depth in to the player hand
 
 	if(column[colnum].getSize() > 0)
 	{
@@ -120,7 +123,7 @@ int Board::pickCards(int colnum, int depth)
 }
 
 int Board::dropCards(int colnum)
-{
+{//drops cards out of the player hand onto colnum if allowed
 
 	if(colnum == -1)
 	{
@@ -152,7 +155,7 @@ int Board::dropCards(int colnum)
 }
 
 void Board::makeMove(int src, int dest)
-{
+{//makes a move from the player hand to the dest column.  stores undo info in the struct
 	undoinfo->undone = 0;
 	undoinfo->movingTo = dest;
 	undoinfo->movingFrom = src;
@@ -161,7 +164,7 @@ void Board::makeMove(int src, int dest)
 }
 
 void Board::undo()
-{
+{//undos the last move.
 	if(!undoinfo->undone)
 	{
 		undoinfo->undone = 1;
@@ -175,12 +178,12 @@ CardColumn Board::getColumn(int colNum)
 }
 
 int Board::getDeckRemaining()
-{
+{//returns the size of the deck
 	return deck.getSize();
 }
 
 void Board::draw()
-{
+{//draws drawNumber of cards
 	int card;
 	deque<int> deckpile;
 
@@ -212,7 +215,7 @@ void Board::draw()
 }
 
 int Board::putUp(int col_num)  //this funtion checks if a card can be moved to a foundation, and moves it if possible.
-{
+{//puts up the top card of col_num to the foundation piles if its a valid move
 	int suit;
 
 	if(column[col_num].getSize() == 0)

@@ -32,22 +32,22 @@ SolMainWindow::SolMainWindow()
 {
 	SolGUIptr = new SolGUI;
 	signalMapper = new QSignalMapper;
-	
-	for(int i = 0; i < 8; i++)
-		backAct.push_back(new QAction(this));
 
+	//setup our menus
 	createActions();
 	createMenus();
 
-	backAct[0]->setChecked(true);
+	backAct[0]->setChecked(true); //by default we use the normal cardbacks, so check it in the menu
+	setDrawNumber3Act->setChecked(true); //default = draw 3 cards
 
 	setWindowTitle(tr("Solitaire GUI"));
 	resize(900, 600);
 
 	this->setStyleSheet("background-color: darkgreen;");
 
-	setCentralWidget(SolGUIptr);
+	setCentralWidget(SolGUIptr); //main widget is our solitaire game
 
+	//sets up timers for looping updates
 	statusLoopTimer = new QTimer;
 	statusLoopTimer->start(500);
 	connect(statusLoopTimer, SIGNAL(timeout()), this, SLOT(updateStatus()));
@@ -67,7 +67,7 @@ SolMainWindow::~SolMainWindow()
 }
 
 void SolMainWindow::updateStatus()
-{
+{//called every 20ms to pull current game stats from SolGUI and update them in the gui
 	stringstream ss;
 
 	ss << "Score(not working yet): " << SolGUIptr->getPlayerScore() << "      Time: " << SolGUIptr->getPlayedTime();
@@ -77,13 +77,14 @@ void SolMainWindow::updateStatus()
 }
 
 void SolMainWindow::updateOneSec()
-{
+{//calls solgui to update game time every second
 	SolGUIptr->incrementPlayerTime();
 	oneSecTimer->start(1000);
 }
 
 void SolMainWindow::createMenus()
 {
+	//this adds all of our menu functions
 	menuBar()->setStyleSheet("background-color: gray;");
 
 	menuBar()->addAction(redealAct);
@@ -104,6 +105,7 @@ void SolMainWindow::createActions()
 {
 	stringstream ss;
 
+	//the followed code sets up all the menu actions
 	redealAct = new QAction(tr("&ReDeal"), this);
 	connect(redealAct, SIGNAL(triggered()), this, SLOT(redealTrigger()));
 
@@ -117,6 +119,10 @@ void SolMainWindow::createActions()
 	setDrawNumber3Act = new QAction(tr("&Draw 3"), this);
 	setDrawNumber3Act->setCheckable(true);
 	connect(setDrawNumber3Act, SIGNAL(triggered()), this, SLOT(setDrawNumber3Trigger()));
+
+	//set the number of actions we want automatically generated in backAct by changing i
+	for(int i = 0; i < 8; i++)
+		backAct.push_back(new QAction(this));
 
 	//All of the follow is the signal mapping code for the card back menu
 	//  items.  We have to use a signal mapper because Qt's SIGNAL->SLOT
@@ -137,7 +143,7 @@ void SolMainWindow::createActions()
 }
 
 void SolMainWindow::changeBack(int backnumber)
-{
+{//trigger function for changing card back
 	for(unsigned int i = 0; i < backAct.size(); i++)
 		backAct[i]->setChecked(false);
 
@@ -146,24 +152,24 @@ void SolMainWindow::changeBack(int backnumber)
 }
 
 void SolMainWindow::redealTrigger()
-{
+{//trigger for redealing cards
 	SolGUIptr->redeal();
 }
 
 void SolMainWindow::undoTrigger()
-{
+{//trigger for undoing a move
 	SolGUIptr->undo();
 }
 
 void SolMainWindow::setDrawNumber1Trigger()
-{
+{//trigger for setting drawNumber to 1
 	setDrawNumber3Act->setChecked(false);
 	setDrawNumber1Act->setChecked(true);
 	SolGUIptr->setDrawNumber1();
 }
 
 void SolMainWindow::setDrawNumber3Trigger()
-{
+{//trigger for setting drawNumber to 3
 	setDrawNumber1Act->setChecked(false);
 	setDrawNumber3Act->setChecked(true);
 	SolGUIptr->setDrawNumber3();

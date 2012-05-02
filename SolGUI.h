@@ -38,15 +38,17 @@ class SolGUI : public QWidget
 public:
 	SolGUI();
 	~SolGUI();
-	void redeal();
-	void setDrawNumber1();
-	void setDrawNumber3();
-	void undo();
-	void incrementPlayerTime();
-	int getPlayerScore();
-	int getPlayedTime();
-	void changeCardBack(int);
+	//The following public functions delegate control to board, and are menu functions from QtMain
+	void redeal();             //resets board
+	void setDrawNumber1();     //sets draw number to 1
+	void setDrawNumber3();     //sets draw number to 3
+	void undo();               //undos last move
+	void incrementPlayerTime();//increments game time by 1 sec
+	int getPlayerScore();      //returns player score
+	int getPlayedTime();       //returns played time
+	void changeCardBack(int);  //changes card back to number
 protected:
+	//Qt inherited functions
 	void paintEvent(QPaintEvent*);
 	void mousePressEvent(QMouseEvent*);
 	void mouseMoveEvent(QMouseEvent*);
@@ -54,34 +56,37 @@ protected:
 	void resizeEvent(QResizeEvent*);
 	void mouseDoubleClickEvent(QMouseEvent*);
 private:
-	void setUpSnapLocs();
-	void reloadAssets();
-	void rescaleAssets();
-	void getCardSelectLoc(int, int);
-	void returnCards();
+	void setUpSnapLocs();      //sets up the locations for all of the cards
+	void reloadAssets();       //reloads the files for all the card images
+	void rescaleAssets();      //rescales the images in memory to the appropriate window size
+	void getCardSelectLoc(int, int);   //calls the correct function in board for manipulating cards
 
-	Board * board;
+	Board * board;             //pointer to our current board
 
-	QSize *snapLocs;
-	QSize *suitsnapLocs;
-	QSize deckLoc;
-	QSize *topLocs;
+	QSize *snapLocs;           //locations for card stacks
+	QSize *suitsnapLocs;       //locations for suit piles
+	QSize deckLoc;             //location for the deck
 
+	//QImage pointers to array that contain the original full-resolution card art
 	QImage *origcardImage;
 	QImage *origcardBack;
 	QImage *origsuitBack;
 	QImage *origdeckBlank;
 
+	//QImage pointers to array that contain the scaled card art
 	QImage *cardImage;
 	QImage *cardBack;
 	QImage *suitBack;
 	QImage *deckBlank;
 
+	//returns card absolute number to card values and suits for loading from file
 	string cardValue(const int);
 	string cardSuit(const int);
 
+	//current selected card back
 	int cardBackNumber;
 
+	//general screen values
 	int screenWidth;
 	int screenHeight;
 	float ratio;

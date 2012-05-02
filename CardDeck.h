@@ -32,9 +32,9 @@ public:
 	CardDeck(const int=52);
 	int getSize(); //returns deck dize
 	void shuffle(); //shuffles deck
-	void newDeck();
-	void pushCard(const int);
-	int getCard();
+	void newDeck(); //refreshes the deck
+	void pushCard(const int); //adds a card to the deck
+	int getCard(); //pulls a card out of the deck
 
 private:
 	deque<int> Deck; //deck of 52 cards
