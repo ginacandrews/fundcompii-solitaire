@@ -19,6 +19,9 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.   //
 ////////////////////////////////////////////////////////////////////////////////
 
+#ifndef SOLGUI_H
+#define SOLGUI_H
+
 #include <string>
 #include <iostream>
 #include <QWidget>
@@ -34,6 +37,11 @@ class SolGUI : public QWidget
 
 public:
 	SolGUI();
+	~SolGUI();
+	void redeal();
+	int getPlayerScore();
+	int getPlayedTime();
+	void changeCardBack(int);
 protected:
 	void paintEvent(QPaintEvent*);
 	void mousePressEvent(QMouseEvent*);
@@ -43,19 +51,30 @@ protected:
 	void mouseDoubleClickEvent(QMouseEvent*);
 private:
 	void setUpSnapLocs();
+	void reloadAssets();
+	void rescaleAssets();
 	void getCardSelectLoc(int, int);
 	void returnCards();
 
-	Board board;
+	Board * board;
+
 	QSize *snapLocs;
 	QSize *suitsnapLocs;
 	QSize deckLoc;
 	QSize *topLocs;
-	string cardValue(const int);
-	string cardSuit(const int);
+
+	QImage *origcardImage;
+	QImage *origcardBack;
+	QImage *origsuitBack;
 	QImage *cardImage;
 	QImage *cardBack;
 	QImage *suitBack;
+
+	string cardValue(const int);
+	string cardSuit(const int);
+
+	int cardBackNumber;
+
 	int screenWidth;
 	int screenHeight;
 	float ratio;
@@ -67,3 +86,5 @@ private:
 	int dragx;
 	int dragy;
 };
+
+#endif

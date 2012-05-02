@@ -39,7 +39,7 @@ void CardColumn::setCard(int card, int flp){
 
 
 void CardColumn::print(){  //prints out card numberes, for testing purposes only
-	for (int i=0; i<value.size(); i++){
+	for (unsigned int i=0; i<value.size(); i++){
 		cout<<"("<<value[i]<<","<<flip[i]<<")";
 		//if (flip[i]==0) cout<<"X  ";
 		//else cout<<cardValue(value[i])<<" of "<<cardSuit(value[i]);

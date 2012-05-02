@@ -30,6 +30,7 @@ class Board{
 
 public:
 	Board();
+	~Board();
 	void deal();			//deals out cards
 	void print();			//prints out all the columns
 	int isAllowed(int, int); 	//returns 1 if it's allowed 
