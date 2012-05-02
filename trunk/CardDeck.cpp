@@ -30,7 +30,7 @@
 using namespace std;
 
 CardDeck::CardDeck(const int n)
-{//non-default constructor
+{//constructor, n is optional, set to 52 if not specified
 	for(int i=0; i < n; i++){
 		Deck.push_back(i);
 	}

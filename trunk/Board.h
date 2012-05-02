@@ -69,6 +69,7 @@ private:
 	int drawNumber;             //number of cards to draw from the deck per turn
 	int movingFrom;             //holds the column number we're moving from
 	int playerTime;             //elapsed game time
+
 	//Cardcolumns
 	//0: Player hand
 	//1-7 Each of the card stacks

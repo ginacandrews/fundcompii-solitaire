@@ -36,6 +36,7 @@ public:
 	~SolMainWindow();
 
 public Q_SLOTS:
+	//The below are the trigger functions for all of the menu options.  They delegate control to SolGUI.
 	void redealTrigger();
 	void undoTrigger();
 	void setDrawNumber1Trigger();
@@ -45,19 +46,23 @@ public Q_SLOTS:
 	void changeBack(int);
 
 private:
+	//setup functions for our menus
 	void createMenus();
 	void createActions();
 
-	SolGUI * SolGUIptr;
+	SolGUI * SolGUIptr; //pointer to the SolGUI
 	
-	QSignalMapper * signalMapper;
+	QSignalMapper * signalMapper; //used to map signals for cardback trigger calls
 
+	//timers for our status update loop and game time
 	QTimer * statusLoopTimer;
 	QTimer * oneSecTimer;
 	
+	//menus
 	QMenu * cardBackMenu;
 	QMenu * drawMenu;
 
+	//actions contained in the menus
 	QAction * setDrawNumber1Act;
 	QAction * setDrawNumber3Act;
 	QAction * redealAct;

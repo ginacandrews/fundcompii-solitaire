@@ -74,7 +74,7 @@ SolGUI::~SolGUI()
 }
 
 void SolGUI::redeal()
-{
+{//starts a fresh board
 	if(board != NULL)
 		delete board;
 
@@ -96,30 +96,30 @@ void SolGUI::setDrawNumber3()
 }
 
 void SolGUI::undo()
-{
+{//undos last move
 	board->undo();
 	update();
 }
 
 void SolGUI::incrementPlayerTime()
-{
+{//increments the current game time by one second
 	board->incrementPlayerTime();
 }
 
 int SolGUI::getPlayerScore()
-{
+{//returns player score
 	return board->getDeckRemaining();
 	//return board->getPlayerScore();
 }
 
 int SolGUI::getPlayedTime()
-{
+{//returns current play time
 	return board->getPlayerTime();
 	//return board->getPlayedTime();
 }
 
 void SolGUI::changeCardBack(int backnumber)
-{
+{//changes card back to certain card back number
 	cardBackNumber = backnumber+1;
 	reloadAssets();
 	rescaleAssets();
@@ -127,7 +127,7 @@ void SolGUI::changeCardBack(int backnumber)
 }
 
 void SolGUI::paintEvent(QPaintEvent*)
-{
+{//draws all of the cards, including what we're currently holding
 	CardColumn cardColumn;
 	QPainter qpainter(this);
 
@@ -208,7 +208,7 @@ void SolGUI::mouseMoveEvent(QMouseEvent *e)
 }
 
 void SolGUI::mouseDoubleClickEvent(QMouseEvent *e)
-{
+{//throws cards up to the foundation piles in the event it's legit
 	CardColumn cardColumn;
 	int x = e->x();
 	int y = e->y();
@@ -246,11 +246,15 @@ void SolGUI::mouseReleaseEvent(QMouseEvent *e)
 }
 
 void SolGUI::getCardSelectLoc(int x, int y)
-{
+{//resolves an x,y position of a click or drop mouse event to a location and calls the appropriate board functions
 	CardColumn cardColumn;
 	CardColumn emptyColumn;
 	int columnNumber = -1;
 	int depthInColumn = -1;
+
+	//All of the code in here is iterative, so it will iteratively check to see if the x,y position fits within the
+	// bound of one of the card stacks, and if it does, it will call the appropriate board functions.
+	// The whole point of this code is to resolve x,y -> column number
 
 	//if we click the deck
 	if(x < deckLoc.width()*ratio+(cardBack->width()/2) && x > deckLoc.width()*ratio-(cardBack->width()/2)
@@ -312,7 +316,7 @@ void SolGUI::resizeEvent(QResizeEvent *e)
 }
 
 void SolGUI::rescaleAssets()
-{
+{//takes the original card images found in memory and scales them to the window size appropriately
 	float heightratio, widthratio;
 
 	heightratio = .7f*float(screenHeight / float(600));
@@ -336,7 +340,7 @@ void SolGUI::rescaleAssets()
 }
 
 void SolGUI::reloadAssets()
-{
+{//performs a full reload of the image files from file.  more time consuming, but used at the beginning of the program and when changing the card back type
 	stringstream ss;
 	string file;
 
@@ -358,7 +362,8 @@ void SolGUI::reloadAssets()
 	origsuitBack[4].load("resources/spades.png");
 }
 
-string SolGUI::cardValue(const int cardnum){ //returns card value as char 
+string SolGUI::cardValue(const int cardnum)
+{//returns card value as string for loading files
 	string character;
 	stringstream ss;
 	int num = cardnum%13;	
@@ -384,7 +389,8 @@ string SolGUI::cardValue(const int cardnum){ //returns card value as char
 	return(character);
 }
 
-string SolGUI::cardSuit(const int cardnum){
+string SolGUI::cardSuit(const int cardnum)
+{//translate internal card number to suit string for loading files
 	string suit;
 	if (cardnum/13>=0) suit = "diamonds";
 	if (cardnum/13>=1) suit = "clubs";
