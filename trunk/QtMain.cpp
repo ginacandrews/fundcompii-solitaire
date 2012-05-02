@@ -70,8 +70,11 @@ void SolMainWindow::updateStatus()
 {//called every 20ms to pull current game stats from SolGUI and update them in the gui
 	stringstream ss;
 
-	ss << "Score(not working yet): " << SolGUIptr->getPlayerScore() << "      Time: " << SolGUIptr->getPlayedTime();
-	statusBar()->showMessage(QString(ss.str().c_str()));
+	if(SolGUIptr->getGameOver())
+		ss << "Score: " << SolGUIptr->getPlayerScore() << "      Time: " << SolGUIptr->getPlayedTime() << "      GAME OVER!  YOU WIN!";
+	else
+	ss << "Score: " << SolGUIptr->getPlayerScore() << "      Time: " << SolGUIptr->getPlayedTime();
+		statusBar()->showMessage(QString(ss.str().c_str()));
 
 	statusLoopTimer->start(20);
 }

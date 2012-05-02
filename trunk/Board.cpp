@@ -33,6 +33,8 @@ Board::Board()
 	undoinfo = new undoInfo;
 	undoinfo->undone = 1;
 	playerTime = 0;
+	playerScore = 0;
+	gameOver = 0;
 }
 
 Board::~Board()
@@ -42,7 +44,14 @@ Board::~Board()
 
 void Board::incrementPlayerTime()
 {//called by SolGUI to increment the game time by 1
+	if(gameOver)
+		return;
+
 	playerTime++;
+
+	//SCORE HOOK:  subtract 2 points every 10 secs
+	if(playerTime%10 == 0)
+		playerScore = playerScore-2;
 }
 
 int Board::getPlayerTime()
@@ -50,9 +59,20 @@ int Board::getPlayerTime()
 	return playerTime;
 }
 
+int Board::getPlayerScore()
+{
+	return playerScore;
+}
+
+int Board::getGameOver()
+{
+	return gameOver;
+}
+
 void Board::deal()
 {//deals out cards at the start of a new game
 	int flp=0;
+
 	deck.newDeck();
 	deck.shuffle();
 	for (int i = 7; i> 0; i--){  //these two loops set the starting columns.
@@ -102,6 +122,9 @@ int Board::isAllowed(int top, int bottom)
 int Board::pickCards(int colnum, int depth)
 {//picks cards up out of colnum, depth in to the player hand
 
+	if(gameOver)
+		return 0;
+
 	if(column[colnum].getSize() > 0)
 	{
 		if(column[colnum].getFlip(depth) == 1)
@@ -114,6 +137,7 @@ int Board::pickCards(int colnum, int depth)
 				if(column[colnum].getFlip(depth+1) == 1)
 				{
 					column[colnum].flipOver();
+					playerScore = playerScore + 5; //SCORE HOOK: add 5 to score for flipping a card
 					undoinfo->undone = 1; //prevent against bad undos
 				}
 		}
@@ -124,6 +148,9 @@ int Board::pickCards(int colnum, int depth)
 
 int Board::dropCards(int colnum)
 {//drops cards out of the player hand onto colnum if allowed
+
+	if(gameOver)
+		return 0;
 
 	if(colnum == -1)
 	{
@@ -138,11 +165,12 @@ int Board::dropCards(int colnum)
 	}
 	else if(column[colnum].getSize() > 0)
 	{
-		if(isAllowed(column[PLAYER_HAND].getVal(0), column[colnum].getVal(column[colnum].getSize() - 1)))
-		{
-			makeMove(movingFrom, colnum);
-			return 1;
-		}
+		if(column[colnum].getFlip(column[colnum].getSize() - 1) == 1)
+			if(isAllowed(column[PLAYER_HAND].getVal(0), column[colnum].getVal(column[colnum].getSize() - 1)))
+			{
+				makeMove(movingFrom, colnum);
+				return 1;
+			}
 
 	} else if(((column[PLAYER_HAND].getVal(0)+1) % 13 == 0) && (column[PLAYER_HAND].getVal(0) != 0))
 	{
@@ -156,15 +184,28 @@ int Board::dropCards(int colnum)
 
 void Board::makeMove(int src, int dest)
 {//makes a move from the player hand to the dest column.  stores undo info in the struct
+
+	if(gameOver)
+		return;
+
 	undoinfo->undone = 0;
 	undoinfo->movingTo = dest;
 	undoinfo->movingFrom = src;
 	undoinfo->numCards = column[PLAYER_HAND].getSize();
 	column[dest].pushSection(column[PLAYER_HAND].popSection(column[PLAYER_HAND].getSize()));
+
+	//SCORE HOOKS:
+	if((src == DECK_DISCARD) && (dest > 0) && (dest < 8))
+		playerScore = playerScore + 5; //deck discard to piles
+	if((src > SUITPILE_OFFSET) && (dest > 0) && (dest < 8))
+		playerScore = playerScore - 15; //suitpile(foundation) to piles
 }
 
 void Board::undo()
 {//undos the last move.
+	if(gameOver)
+		return;
+
 	if(!undoinfo->undone)
 	{
 		undoinfo->undone = 1;
@@ -186,6 +227,9 @@ void Board::draw()
 {//draws drawNumber of cards
 	int card;
 	deque<int> deckpile;
+
+	if(gameOver)
+		return;
 
 	undoinfo->undone = 1; //prevent against bad undos
 
@@ -232,21 +276,35 @@ int Board::putUp(int col_num)  //this funtion checks if a card can be moved to a
 	{
 		if(cardnum % 13 == 0)
 		{
+			//SCORE HOOKS:
+			if(col_num == DECK_DISCARD)
+				playerScore = playerScore + 10;
+			if((col_num > 0) && (col_num < 8))
+				playerScore = playerScore + 5;
+
 			undoinfo->undone = 0;
 			undoinfo->movingTo = SUITPILE_OFFSET+suit;
 			undoinfo->movingFrom = col_num;
 			undoinfo->numCards = 1;
 			column[SUITPILE_OFFSET+suit].pushSection(column[col_num].popSection(1));
+			checkEndgame();
 			return 1;
 		}
 	} else {
 		if (cardnum%13 == (column[SUITPILE_OFFSET+suit].getVal(column[SUITPILE_OFFSET+suit].getSize()-1) % 13)+1)
 		{
+			//SCORE HOOKS:
+			if(col_num == DECK_DISCARD)
+				playerScore = playerScore + 10;
+			if((col_num > 0) && (col_num < 8))
+				playerScore = playerScore + 5;
+
 			undoinfo->undone = 0;
 			undoinfo->movingTo = SUITPILE_OFFSET+suit;
 			undoinfo->movingFrom = col_num;
 			undoinfo->numCards = 1;
 			column[SUITPILE_OFFSET+suit].pushSection(column[col_num].popSection(1));
+			checkEndgame();
 			return 1;
 		}
 	}
@@ -254,3 +312,12 @@ int Board::putUp(int col_num)  //this funtion checks if a card can be moved to a
 	return 0;
 }
 
+void Board::checkEndgame()
+{
+	for(int i = 1; i < 5; i++)
+		if(column[SUITPILE_OFFSET+i].getSize() != 13)
+			return;
+
+	gameOver = 1;
+	playerScore = playerScore + 700000/playerTime;
+}

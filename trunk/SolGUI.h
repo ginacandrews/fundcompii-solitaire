@@ -46,6 +46,7 @@ public:
 	void incrementPlayerTime();//increments game time by 1 sec
 	int getPlayerScore();      //returns player score
 	int getPlayedTime();       //returns played time
+	int getGameOver();         //gets the game over state
 	void changeCardBack(int);  //changes card back to number
 protected:
 	//Qt inherited functions
