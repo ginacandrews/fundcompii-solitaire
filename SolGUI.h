@@ -84,8 +84,8 @@ private:
 	string cardValue(const int);
 	string cardSuit(const int);
 
-	//current selected card back
-	int cardBackNumber;
+	int drawNumber; //number of cards to draw out of the deck
+	int cardBackNumber; //current selected card back
 
 	//general screen values
 	int screenWidth;

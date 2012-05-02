@@ -45,12 +45,14 @@ SolGUI::SolGUI()
 	origdeckBlank = new QImage;
 
 	cardBackNumber = 1;
+	drawNumber = 3;
 
 	reloadAssets();
 
 	setUpSnapLocs();
 
 	board = new Board;
+	board->setDrawNumber(drawNumber);
 
 	board->deal();
 	board->draw();
@@ -79,6 +81,7 @@ void SolGUI::redeal()
 		delete board;
 
 	board = new Board;
+	board->setDrawNumber(drawNumber);
 	board->deal();
 	board->draw();
 
@@ -87,11 +90,13 @@ void SolGUI::redeal()
 
 void SolGUI::setDrawNumber1()
 {
+	drawNumber = 1;
 	board->setDrawNumber(1);
 }
 
 void SolGUI::setDrawNumber3()
 {
+	drawNumber = 3;
 	board->setDrawNumber(3);
 }
 
