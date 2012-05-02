@@ -34,7 +34,7 @@ CardDeck::CardDeck(const int n)
 	for(int i=0; i < n; i++){
 		Deck.push_back(i);
 	}
-	srand(unsigned int(time(0)));
+	srand(int(time(0)));
 }
 
 int CardDeck::getSize()

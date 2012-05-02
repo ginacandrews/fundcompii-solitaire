@@ -9,5 +9,5 @@ INCLUDEPATH += .
 CONFIG += qt
 
 # Input
-HEADERS += SolGUI.h CardDeck.h CardColumn.h Board.h
-SOURCES += main.cpp SolGUI.cpp CardDeck.cpp CardColumn.cpp Board.cpp
+HEADERS += QtMain.h SolGUI.h CardDeck.h CardColumn.h Board.h
+SOURCES += main.cpp QtMain.cpp SolGUI.cpp CardDeck.cpp CardColumn.cpp Board.cpp
