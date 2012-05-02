@@ -29,14 +29,13 @@ class CardColumn{
 
 public:
 	CardColumn();
-	void setCard(int, int);
-	void print();
-	void flipOver();
-	int getVal(int);
-	int getFlip(int);
+	void setCard(int, int);      //pushes a card into the column
+	void flipOver();             //flips a card over
+	int getVal(int);             //gets value at position
+	int getFlip(int);            //gets flip at position
 	deque<int> popSection(int);  //functions for pushing and popping sections of the column
 	void pushSection(deque<int>);//
-	int getSize();
+	int getSize();               //returns size of a column
 
 private:
 	deque<int> value;

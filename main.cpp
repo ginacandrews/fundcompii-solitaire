@@ -22,6 +22,10 @@
 #include <iostream>
 #include <QApplication>
 #include <qgraphicsscene.h>
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
 #include <qgraphicsview.h>
 
 #include "SolGUI.h"
@@ -30,14 +34,19 @@
 
 using namespace std;
 
+#ifdef _WIN32
+int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow)
+#else
 int main ( int argc, char *argv[] )
+#endif
 {
-	QApplication GUILoop(argc, argv);
-	//QGraphicsScene scene;
-	//QGraphicsView view(&scene);
-	//view.show();
+#ifdef _WIN32
+	int argc = 0;
+	char ** argv;
+#endif
 
-	//SolGUI a;
+	QApplication GUILoop(argc, argv);
+
 	SolMainWindow a;
 
 	a.show();
