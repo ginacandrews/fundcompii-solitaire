@@ -54,6 +54,8 @@ public:
 	void undo();                //undo last action, maximum 1 time
 	void incrementPlayerTime(); //increments elapsed time by 1, used by qt easy timers
 	int getPlayerTime();        //returns elapsed time in game
+	int getPlayerScore();
+	int getGameOver();
 	int getDeckRemaining();     //returns number of cards in the deck
 	CardColumn getColumn(int);	//returns cardcolumn 
 	int putUp(int);             //(column) - puts up (column)'s top card in to the foundations, if possible.  returns 1 on success
@@ -65,10 +67,13 @@ private:
 	int cardNumber(const int); 	//returns number of card (0 = Ace, 12=K)
 	int suitNum(const int);		//returns 1 for red, 0 for black
 	void makeMove(int, int);    //makes a move in to (unused, dest).  This inserts relvant information in to the undo structure.
+	void checkEndgame();        //checks to see if all cards are in the foundations.  sets gameOver = 1 if so
 
 	int drawNumber;             //number of cards to draw from the deck per turn
 	int movingFrom;             //holds the column number we're moving from
 	int playerTime;             //elapsed game time
+	int playerScore;
+	int gameOver;
 
 	//Cardcolumns
 	//0: Player hand

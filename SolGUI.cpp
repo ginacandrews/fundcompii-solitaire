@@ -108,7 +108,7 @@ void SolGUI::incrementPlayerTime()
 
 int SolGUI::getPlayerScore()
 {//returns player score
-	return board->getDeckRemaining();
+	return board->getPlayerScore();
 	//return board->getPlayerScore();
 }
 
@@ -116,6 +116,11 @@ int SolGUI::getPlayedTime()
 {//returns current play time
 	return board->getPlayerTime();
 	//return board->getPlayedTime();
+}
+
+int SolGUI::getGameOver()
+{
+	return board->getGameOver();
 }
 
 void SolGUI::changeCardBack(int backnumber)
@@ -221,13 +226,19 @@ void SolGUI::mouseDoubleClickEvent(QMouseEvent *e)
 			for(int j = (((cardColumn.getSize()-1) == -1) ? 0 : cardColumn.getSize()-1); j >= 0; j--)
 				if(x < (snapLocs[i].width()*ratio+(cardBack->width()/2)) && x > (snapLocs[i].width()*ratio-(cardBack->width()/2))
 					&& y < (snapLocs[i].height()*ratio+j*35*ratio+(cardBack->height()/2)) && y > (snapLocs[i].height()*ratio+j*35*ratio-(cardBack->height()/2)))
+				{
 					board->putUp(i);
+					return;
+				}
 		}
 
 		int i = (((board->getColumn(DECK_DISCARD).getSize() % 3) == 0) ? 3 : board->getColumn(DECK_DISCARD).getSize() % 3);
 		if(x < deckLoc.width()*ratio+170*ratio+i*35*ratio+((cardBack->width())/2) && x > deckLoc.width()*ratio+170*ratio+i*35*ratio-((cardBack->width())/2)
 			&& y > deckLoc.height()*ratio-((cardBack->height())/2) && y < deckLoc.height()*ratio+((cardBack->height())/2))
+		{
 			board->putUp(DECK_DISCARD);
+			return;
+		}
 
 	}
 }
