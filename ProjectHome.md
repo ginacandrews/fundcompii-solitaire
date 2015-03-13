@@ -1,0 +1,1 @@
+The goal of the project is to create a working solitaire clone with GUI for the purposes of submitting it as a final project for Fundamentals of Computing II Spring 2012.
